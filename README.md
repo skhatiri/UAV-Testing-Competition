@@ -118,7 +118,7 @@ agent:
 
 Below image shows the graph generated after the run:
 
-![Screenshot from 2023-09-13 12-56-31.png](..%2F..%2FPictures%2FScreenshot%20from%202023-09-13%2012-56-31.png)
+![generated_graph.png](generated_graph.png)
 
 ## UAV Test Generators
 
