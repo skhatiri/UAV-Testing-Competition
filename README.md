@@ -4,6 +4,21 @@
 The [SBFT workshop](https://sbft24.github.io/) organizes a testing tool competition for various tracks including
 tool competition for Unmanned Aerial Vehicles(UAVs).
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Goal](#goal)
+- [Software Under Test](#software-under-test)
+- [UAV Test Cases](#uav-test-cases)
+- [UAV Test Generators](#uav-test-generators)
+- [Competition Platform](#competition-platform)
+- [Case Studies](#case-studies)
+- [Competition Rules](#competition-rules)
+- [Submission](#submission-)
+- [Evaluation and Rankings](#evaluation-and-ranking-)
+  - [Evaluation](#evaluation-)
+  - [Evaluation Metrics and Ranking](#evaluation-metrics-and-ranking-)
+
 ## Overview:
 
 In the tool competition, it is required that each participant presents a robust test generator capable of creating 
