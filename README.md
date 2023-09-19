@@ -32,7 +32,7 @@ However, the *engineering complexity* of UAVs and their test environments, and t
 
 In the first edition of the UAV Testing Competition, we aim to provide software testing researchers with a simple platform to facilitate their onboarding in the UAV domain. Using the provided platform and case study, the goal is to use search-based techniques for generating challenging test cases for autonomous vision-based UAV navigation systems.
 
-- The [Software Under Test](#software-under-test) is [PX4-Avoidance]((https://github.com/PX4/PX4-Avoidance)), a vision-based autonomous obstacle avoidance system developed on top of [PX4-Autopilot](https://github.com/PX4/PX4-Autopilot).
+- The [Software Under Test](#software-under-test) is [PX4-Avoidance](https://github.com/PX4/PX4-Avoidance), a vision-based autonomous obstacle avoidance system developed on top of [PX4-Autopilot](https://github.com/PX4/PX4-Autopilot).
 
 - We create challenging scenarios for PX4-Avoidance by placing static obstacles on the UAV's path.
 - The ultimate goal is to find some specific obstacle configurations (size, position) that could lead to a crash or unsafe flight by the autopilot, as seen in the below image.
