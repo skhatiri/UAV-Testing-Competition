@@ -266,7 +266,7 @@ This ensures a fair and comprehensive evaluation of the generated tests, allowin
 
 - Sajad Khatiri (Zurich University of Applied Sciences) - <mazr@zhaw.ch>
 - Prasun Saurabh (Zurich University of Applied Sciences) - <sarr@zhaw.ch>
-- Timothy Zimmermann (Verity) - <timothy.zimmermann.93@gmail.com>
-- Charith Munasinghe (Zurich University of Applied Sciences)- <mung@zhaw.ch>
-- Christian Birchler (Zurich University of Applied Sciences)- <birc@zhaw.ch>
+- Timothy Zimmermann (Verity) - <timothy.zimmermann@outlook.com>
+- Charith Munasinghe (Zurich University of Applied Sciences) - <mung@zhaw.ch>
+- Christian Birchler (Zurich University of Applied Sciences) - <birc@zhaw.ch>
 - Dr. Sebastiano Panichella (Zurich University of Applied Sciences) - <panc@zhaw.ch>
