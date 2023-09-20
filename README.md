@@ -32,7 +32,7 @@ However, the *engineering complexity* of UAVs and their test environments, and t
 
 In the first edition of the UAV Testing Competition, we aim to provide software testing researchers with a simple platform to facilitate their onboarding in the UAV domain. Using the provided platform and case study, the goal is to use search-based techniques for generating challenging test cases for autonomous vision-based UAV navigation systems.
 
-- The [Software Under Test](#software-under-test) is [PX4-Avoidance]((https://github.com/PX4/PX4-Avoidance)), a vision-based autonomous obstacle avoidance system developed on top of [PX4-Autopilot](https://github.com/PX4/PX4-Autopilot).
+- The [Software Under Test](#software-under-test) is [PX4-Avoidance](https://github.com/PX4/PX4-Avoidance), a vision-based autonomous obstacle avoidance system developed on top of [PX4-Autopilot](https://github.com/PX4/PX4-Autopilot).
 
 - We create challenging scenarios for PX4-Avoidance by placing static obstacles on the UAV's path.
 - The ultimate goal is to find some specific obstacle configurations (size, position) that could lead to a crash or unsafe flight by the autopilot, as seen in the below image.
@@ -72,17 +72,14 @@ Developers and researchers often use PX4 as a foundation for creating and testin
 - **[PX4 Avoidance](https://github.com/PX4/PX4-Avoidance)** :
 PX4 Avoidance is a software module in the PX4 Autopilot ecosystem that provides obstacle detection and avoidance capabilities.
 PX4 Avoidance uses various sensors and algorithms to help UAVs navigate and avoid obstacles in their environment. It allows UAVs to detect obstacles such as buildings, trees, and other objects in their flight path and make adjustments to their flight path to avoid collisions or navigate around these obstacles safely.
-
 Overall, PX4 Avoidance is a critical component for ensuring the safe and reliable operation of UAVs in complex and dynamic environments.
 
-- **[PX4 Flight Logs](https://docs.px4.io/main/en/log/flight_log_analysis.html):
+- **[PX4 Flight Logs](https://docs.px4.io/main/en/log/flight_log_analysis.html)**:
 PX4 flight logs are comprehensive records of a drone's operational data and telemetry during its flights. These logs include detailed information such as GPS coordinates, altitude, motor RPM, sensor data, and flight modes. They are invaluable for troubleshooting, performance analysis, and debugging, as they allow developers and operators to examine precisely what happened during a flight, identify potential issues, and fine-tune the drone's behavior and systems for optimal performance and safety. These logs are stored in a standardized format (.ulg), making them compatible with various analysis and visualization tools for in-depth technical examination. [Here is a sample flight log](https://logs.px4.io/plot_app?log=f986a896-c189-4bfa-a11a-1d80fa4b9633).
 
 - **[Gazebo](https://gazebosim.org/home)** :
 Gazebo is an open-source 3D robot simulator that provides a realistic and physics-based simulation environment for testing and validating UAVs and robotic systems.
-
 PX4 often utilizes Gazebo as a simulation platform to create virtual environments where developers and researchers can test UAVs without the need for physical hardware. This allows for various scenarios, including flight testing, obstacle avoidance, and mission planning, to be tested in a safe and controlled virtual environment.
-
 Gazebo simulates the physical properties and dynamics of the UAV and its surroundings, including sensors, wind, and terrain. It is a valuable tool for both software and hardware development, as it enables testing and debugging of UAV control algorithms and systems before deploying them to actual UAV hardware.
 
 ### Aerialist
@@ -118,7 +115,7 @@ drone:
 
 simulation:
   simulator: ros # the simulator environment to run {gazebo,jmavsim,ros} 
-  speed: 1 # the simulator speed relative to real time
+  speed: 1 # the simulator speed relative to real-time
   headless: true # whether to run the simulator headless
   obstacles:
   - size: # Object 1 size in l,w,h
@@ -141,7 +138,6 @@ simulation:
       angle: 0
 test:
   commands_file: samples/flights/mission1-commands.csv # runtime commands file address
-  speed: 1 # the commands speed relative to real time
 
 assertion:
   log_file: samples/flights/mission1.ulg # reference log file address
@@ -152,9 +148,9 @@ agent:
   count: 1 # no. of parallel runs (only for k8s)
 ```
 
-**The competition Test Generators are only allowed to manipulate the obstacles in the environment**
-For simplicity, we only consider box shaped obstacles.
-An obstacle is defined by its size (lenght, widht, height) and position in the simulation environment (x,y,z) in meters and its rotation angle in degrees.
+**The competition Test Generators are only allowed to manipulate the obstacles in the environment.**
+For simplicity, we only consider box-shaped obstacles.
+An obstacle is defined by its size (length, width, height) and position in the simulation environment (x,y,z) in meters and its rotation angle in degrees.
 
 ```yaml
 # template-test.yaml
@@ -180,37 +176,37 @@ simulation:
       angle: 0
 ```
 
-Below image shows the drone flight trajectory during the execution of the above test case:
+The below image shows the drone flight trajectory during the execution of the above test case:
 
 <p align="center"><img src="samples/tests/test1.png" alt="sample test plot" width="60%"/></p>
 
 ### Case Studies
 
 The input to the test generators are some simple test cases, without any obstacles in the simulation environment.
-These case studies include a predefined flight mission, relevant drone configurations, simultion configurations and relevant commands to start the autonomous mission.
+These case studies include a predefined flight mission, relevant drone configurations, simulation configurations, and relevant commands to start the autonomous mission.
 
-The test generators are then expected to place obstacles in the simultion environment, inside a predefined area.
+The test generators are then expected to place obstacles in the simulation environment, inside a predefined area.
 
 There have been a few [sample case studies](./case_studies/) provided to help you develop your test generators.
-Some other but similar case studies will be used for evaluation.
+Some other similar case studies will be used for evaluation.
 
 ### UAV Test Generators
 
-Given a simulated test case configuration for autonomous flight (above mentioned case studies), the goal is to generate a more challenging simulated test case by introducing additional obstacles to the environment, to force the UAV to get too close to the obstacles (\ie having a distance below a predefined safety threshold) while still completing the mission.
+Given a simulated test case configuration for autonomous flight (above-mentioned case studies), the goal is to generate a more challenging simulated test case by introducing additional obstacles to the environment, to force the UAV to get too close to the obstacles (\ i.e. having a distance below a predefined safety threshold) while still completing the mission.
 This will create a risky environment for the UAV to operate the mission.
 
 participants are expected to use search-based methods to find challenging obstacle configurations.
 
 The generated test cases should respect the following considerations:
 
-- The drone is expected to **safely** avoid all the obstacles on its path. This includes maintaining a safe distance to the sorrounding obstacles and not crashing to them.
-  - A test exection is considered a **Hard Fail** if there is a collision with any of the obstacles in the environment.
-  - A test execution is considered a **Soft Fail** if the drone does not maintain a minimum safe distance of **1.5 m** to the sorrounding obstacles.
+- The drone is expected to **safely** avoid all the obstacles on its path. This includes maintaining a safe distance from the surrounding obstacles and not crashing into them.
+  - A test execution is considered a **Hard Fail** if there is a collision with any of the obstacles in the environment.
+  - A test execution is considered a **Soft Fail** if the drone does not maintain a minimum safe distance of **1.5 m** to the surrounding obstacles.
 
 - The obstacle configurations are expected to keep the flight mission physically feasible.
   - The test cases that make it impossible for the UAV to find its path (e.g., creating a long wall among the drone path) while there is no hard or soft fail are considered **Invalid**.
 
-- All the obstacles are expected to **fit in a given rectangular area** stated in the case study.
+- All the obstacles are expected to **fit in a given rectangular area** as stated in the case study.
 
 - There can be **up to 4 obstacles** in each test case.
 
@@ -243,7 +239,7 @@ Diversifying the test scenarios is critical as it helps ensure that a wide spect
 explored. The more varied the test cases, the greater the likelihood of identifying hidden flaws and edge cases that
 might otherwise go undetected.
 
-Below evaluation metric will be used to evaluate the tests generated by the tools developed:
+The following metrics will be used to evaluate the tests generated by the tools developed:
 
 - Fault Detection (Test Failure): The test cases will be evaluated for fault detection.
 - Testing Budget: A testing budget will be allocated for generating the test cases.
@@ -263,7 +259,7 @@ test executions.
 ### Baselines
 
 To establish a baseline for evaluating the test generators, [Surrealist](https://github.com/skhatiri/surrealist) will be employed.
-The test cases generated by the competitors will be evaluated against the test generated by Surrealist.
+The test cases generated by the competitors will be evaluated against the tests generated by Surrealist.
 
 Surrealist, serving as the benchmark test generator, will provide a reference point against which the competitors' test cases can be compared.
 This ensures a fair and comprehensive evaluation of the generated tests, allowing for a well-informed assessment of their quality and effectiveness in identifying vulnerabilities within the PX4 avoidance system.
@@ -272,7 +268,7 @@ This ensures a fair and comprehensive evaluation of the generated tests, allowin
 
 - Sajad Khatiri (Zurich University of Applied Sciences) - <mazr@zhaw.ch>
 - Prasun Saurabh (Zurich University of Applied Sciences) - <sarr@zhaw.ch>
-- Timothy Zimmermann (Verity) - <timothy.zimmermann.93@gmail.com>
-- Charith Munasinghe (Zurich University of Applied Sciences)- <mung@zhaw.ch>
-- Christian Birchler (Zurich University of Applied Sciences)- <birc@zhaw.ch>
+- Timothy Zimmermann (Verity) - <timothy.zimmermann@outlook.com>
+- Charith Munasinghe (Zurich University of Applied Sciences) - <mung@zhaw.ch>
+- Christian Birchler (Zurich University of Applied Sciences) - <birc@zhaw.ch>
 - Dr. Sebastiano Panichella (Zurich University of Applied Sciences) - <panc@zhaw.ch>
