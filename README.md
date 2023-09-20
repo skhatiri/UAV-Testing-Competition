@@ -214,6 +214,8 @@ The generated test cases should respect the following considerations:
 
 - There can be **up to 4 obstacles** in each test case.
 
+- Obstacles **must not collide** with each other, and they must be placed directly on the ground (z=0).
+
 A sample test generator using a random approach is documented and made available [here](./snippets/)
 <!-- 
 * ***[Surrealist](https://github.com/skhatiri/Surrealist)*** : It is a tool that provides a search-based Test 

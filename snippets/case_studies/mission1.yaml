@@ -1,0 +1,30 @@
+drone:
+  port: ros #{sitl, ros, cf}
+  params_file: case_studies/mission1-params.csv 
+  mission_file: case_studies/mission1.plan
+
+simulation:
+  simulator: ros #{gazebo, jmavsim, ros} 
+  speed: 1
+  headless: true
+  obstacles:
+  - size:
+      l: 5
+      w: 5
+      h: 5
+    position:
+      x: -8
+      y: 3
+      z: 0
+      r: 0
+
+test:
+  commands_file: case_studies/mission1-commands.csv
+
+assertion:
+  log_file: case_studies/mission1.ulg
+  variable: trajectory
+
+# agent:
+#   engine: local # {k8s, docker, local}
+#   count: 1
