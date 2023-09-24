@@ -21,7 +21,9 @@ The UAV Testing Competition organized by the [Search-Based and Fuzz Testing (SBF
 - [Competition Guideline](#competition-guideline)
   - [Submission](#submission)
   - [Evaluation](#evaluation)
-  - [Baselines](#baselines)
+  <!-- - [Baselines](#baselines) -->
+- [References](#references)
+- [License](#license)
 - [Contacts](#contacts)
   
 ## Overview
@@ -41,10 +43,9 @@ In the first edition of the UAV Testing Competition, we aim to provide software 
 
 ## Goal
 
-In the tool competition, each participant presents a robust test generator capable of creating 
-a diverse set of tests.
-The primary objective is to find potential vulnerabilities within the PX4 obstacle avoidance system. 
-This involves manipulating obstacle sizes and placements within the test environment, 
+In the tool competition, each participant presents a robust test generator capable of generating a diverse set of tests.
+The primary objective is to find potential vulnerabilities within the PX4 obstacle avoidance system.
+This involves manipulating obstacle sizes and placements within the test environment,
 with the ultimate goal of either causing the UAV to crash or significantly diverting it from its intended path.
 
 The goals of the tool competition are as below:
@@ -53,7 +54,7 @@ The goals of the tool competition are as below:
 vulnerabilities within the PX4 avoidance system.
 - The generated test will be for a predefined UAV firmware, model, and mission.
 - The generated test will create a challenging environment by manipulating object sizes and placements to cause
-either UAV crashes or significant deviations in its flight path. 
+either UAV crashes or significant deviations in its flight path.
 
 The effectiveness of these generated tests will be measured based on the number of failed cases and the diversity of
 test scenarios. The goal is to identify potential system weaknesses comprehensively.
@@ -82,11 +83,13 @@ Gazebo is an open-source 3D robot simulator that provides a realistic and physic
 PX4 often utilizes Gazebo as a simulation platform to create virtual environments where developers and researchers can test UAVs without the need for physical hardware. This allows for various scenarios, including flight testing, obstacle avoidance, and mission planning, to be tested in a safe and controlled virtual environment.
 Gazebo simulates the physical properties and dynamics of the UAV and its surroundings, including sensors, wind, and terrain. It is a valuable tool for both software and hardware development, as it enables testing and debugging of UAV control algorithms and systems before deploying them to actual UAV hardware.
 
-### Aerialist
+### Aerialist: UAV Test Bench
 
 [Aerialist](https://github.com/skhatiri/Aerialist) (unmanned AERIAL vehIcle teST bench) is a novel test bench for UAV software that automates all the necessary UAV testing steps: setting up the test environment, building and running the UAV firmware code, configuring the simulator with the simulated world properties, connecting the simulated UAV to the firmware and applying proper UAV configurations at startup, scheduling and executing runtime commands, monitoring the UAV at runtime for any issues, and extracting the flight log file after the test completion.
 
 With Aerialist, we aim to provide the competition participants with an easy platform to automate tests on the simulated UAVs, allowing them to do experiments required to overcome the UAV simulation-based testing challenges.
+**The Test Generators submited to the competition are required to build on top of Aerialist to simplify the evaluation process.** 
+Check [Aeialist's Documentation](https://github.com/skhatiri/Aerialist) for more details on the usage.  
 
 ## Test Generation
 
@@ -192,12 +195,11 @@ Some other similar case studies will be used for evaluation.
 
 ### UAV Test Generators
 
-Given a simulated test case configuration for autonomous flight (above-mentioned case studies), the goal is to generate a more challenging simulated test case by introducing additional obstacles to the environment, to force the UAV to get too close to the obstacles (\ i.e. having a distance below a predefined safety threshold) while still completing the mission.
+Given a simulated test case configuration for autonomous flight (above-mentioned case studies), the goal is to generate a more challenging simulated test case by introducing obstacles to the environment, to force the UAV to get too close to the obstacles (\ i.e. having a distance below a predefined safety threshold) while still completing the mission.
 This will create a risky environment for the UAV to operate the mission.
 
-participants are expected to use search-based methods to find challenging obstacle configurations.
-
-The generated test cases should respect the following considerations:
+Participants are expected to use search-based methods to find challenging obstacle configurations.
+The generated test cases (following the Aerialist test case modeling) should respect the following considerations:
 
 - The drone is expected to **safely** avoid all the obstacles on its path. This includes maintaining a safe distance from the surrounding obstacles and not crashing into them.
   - A test execution is considered a **Hard Fail** if there is a collision with any of the obstacles in the environment.
@@ -223,8 +225,9 @@ based on a given test. This tool internally uses Aerialist to evaluate the test 
 
 ### Submission
 
-* ***Tool Submission***:
-* ***Benchmark results communicated to authors:***
+Information on how to submit your test generators will be updated here.
+
+- **Submission Deadline**: By the end of November 2023
 
 ### Evaluation
 
@@ -244,7 +247,7 @@ The following metrics will be used to evaluate the tests generated by the tools 
 - Fault Detection (Test Failure): The test cases will be evaluated for fault detection.
 - Testing Budget: A testing budget will be allocated for generating the test cases.
 - Test Diversity: Diversity in the test will be valued more.
-- Simplicity: Faults found in less complicated environments will be valued more.
+- Simplicity: Faults found in less complicated environments (fewer obstacles) will be valued more.
 
 <!-- ***In order to rank the generated tests, We will run 10 times the final test for evaluation
 Fault Detection Probability.***
@@ -256,13 +259,33 @@ test executions.
 
 - Developers hold the responsibility for optimizing their utilization of this allocated budget. -->
 
-### Baselines
+<!-- ### Baselines
 
 To establish a baseline for evaluating the test generators, [Surrealist](https://github.com/skhatiri/surrealist) will be employed.
 The test cases generated by the competitors will be evaluated against the tests generated by Surrealist.
 
 Surrealist, serving as the benchmark test generator, will provide a reference point against which the competitors' test cases can be compared.
-This ensures a fair and comprehensive evaluation of the generated tests, allowing for a well-informed assessment of their quality and effectiveness in identifying vulnerabilities within the PX4 avoidance system.
+This ensures a fair and comprehensive evaluation of the generated tests, allowing for a well-informed assessment of their quality and effectiveness in identifying vulnerabilities within the PX4 avoidance system. -->
+
+## References
+
+If you use this tool in your research, please cite the following papers:
+
+- **Sajad Khatiri**, Sebastiano Panichella, and Paolo Tonella, "Simulation-based Test Case Generation for Unmanned Aerial Vehicles in the Neighborhood of Real Flights," *In 2023 IEEE 16th International Conference on Software Testing, Verification and Validation (ICST)*
+  - [Preprint](https://skhatiri.ir/papers/surrealist.pdf)
+
+````{code-block} bibtex
+@inproceedings{khatiri2023simulation,
+  title={Simulation-based test case generation for unmanned aerial vehicles in the neighborhood of real flights},
+  author={Khatiri, Sajad and Panichella, Sebastiano and Tonella, Paolo},
+  booktitle={2023 16th IEEE International Conference on Software Testing, Verification and Validation (ICST)},
+  year={2023},
+}
+````
+
+## License
+
+The software we developed is distributed under MIT license. See the [license](./LICENSE.md) file.
 
 ## Contacts
 
