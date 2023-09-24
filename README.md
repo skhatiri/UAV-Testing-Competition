@@ -13,7 +13,7 @@ The UAV Testing Competition organized by the [Search-Based and Fuzz Testing (SBF
 - [Goal](#goal)
 - [Competition Platform](#competition-platform)
   - [Software Under Test](#software-under-test)
-  - [Aerialist](#aerialist)
+  - [Aerialist](#aerialist-uav-test-bench)
 - [Test Generation](#test-generation)
   - [UAV Test Cases](#uav-test-cases)
   - [Case Studies](#case-studies)
