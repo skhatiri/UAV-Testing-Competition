@@ -39,7 +39,7 @@ In the first edition of the UAV Testing Competition, we aim to provide software 
 - We create challenging scenarios for PX4-Avoidance by placing static obstacles on the UAV's path.
 - The ultimate goal is to find some specific obstacle configurations (size, position) that could lead to a crash or unsafe flight by the autopilot, as seen in the below image.
 
-<p align="center"><img src="samples/tests/test2.png" alt="sample test plot" width="60%"/></p>
+<p align="center"><img src="snippets/case_studies/mission2-failing.png" alt="sample test plot" width="60%"/></p>
 
 ## Goal
 
@@ -88,7 +88,7 @@ Gazebo simulates the physical properties and dynamics of the UAV and its surroun
 [Aerialist](https://github.com/skhatiri/Aerialist) (unmanned AERIAL vehIcle teST bench) is a novel test bench for UAV software that automates all the necessary UAV testing steps: setting up the test environment, building and running the UAV firmware code, configuring the simulator with the simulated world properties, connecting the simulated UAV to the firmware and applying proper UAV configurations at startup, scheduling and executing runtime commands, monitoring the UAV at runtime for any issues, and extracting the flight log file after the test completion.
 
 With Aerialist, we aim to provide the competition participants with an easy platform to automate tests on the simulated UAVs, allowing them to do experiments required to overcome the UAV simulation-based testing challenges.
-**The Test Generators submited to the competition are required to build on top of Aerialist to simplify the evaluation process.** 
+**The Test Generators submited to the competition are required to build on top of Aerialist to simplify the evaluation process.**
 Check [Aeialist's Documentation](https://github.com/skhatiri/Aerialist) for more details on the usage.  
 
 ## Test Generation
@@ -107,81 +107,79 @@ Aerialist models a UAV test case with the following set of *test properties* and
 
 - **Expectation (optional)**: a time series of certain sensor readings that the test flights are expected to follow closely.
 
-Using a predefined [test-description yaml file](samples/tests/template-test.yaml) is the easiest way to define the test case.
+Using a predefined [test-description yaml file](snippets/case_studies/) is the easiest way to define the test case.
 
 ```yaml
-# template-test.yaml
+# mission2.yaml
 drone:
-  port: ros # type of the drone to conect to {sitl, ros, cf}
-  params_file: samples/flights/mission1-params.csv #csv file with the same structure as above 
-  mission_file: samples/flights/mission1.plan # input mission file address
+  port: ros #{sitl, ros, cf}
+  params_file: case_studies/mission-params.csv 
+  mission_file: case_studies/mission2.plan
 
 simulation:
-  simulator: ros # the simulator environment to run {gazebo,jmavsim,ros} 
-  speed: 1 # the simulator speed relative to real-time
-  headless: true # whether to run the simulator headless
-  obstacles:
-  - size: # Object 1 size in l,w,h
-      l: 5
-      w: 5
-      h: 5
-    position: # Object 1 position in x,y,z and it's rotation
-      x: 10
-      y: 5
-      z: 0
-      angle: 0
-  - size: # Object 2 size in l,w,h
-      l: 5
-      w: 5
-      h: 5
-    position:  # Object 2 position in x,y,z and it's rotation
-      x: -10
-      y: 5
-      z: 0
-      angle: 0
+  simulator: ros #{gazebo, jmavsim, ros} 
+  speed: 1
+  headless: true
+  # obstacles:
+  # - size:
+  #     l: 10
+  #     w: 5
+  #     h: 20
+  #   position:
+  #     x: 10
+  #     y: 20
+  #     z: 0
+  #     r: 0
+  # - size:
+  #     l: 10
+  #     w: 5
+  #     h: 20
+  #   position:
+  #     x: -10
+  #     y: 20
+  #     z: 0
+  #     r: 0
+
 test:
-  commands_file: samples/flights/mission1-commands.csv # runtime commands file address
-
-assertion:
-  log_file: samples/flights/mission1.ulg # reference log file address
-  variable: trajectory # reference variables to compare 
-
-agent:
-  engine: docker # where to run the tests {k8s, docker, local}
-  count: 1 # no. of parallel runs (only for k8s)
+  commands_file: case_studies/mission-commands.csv
 ```
+
+<p align="center"><img src="snippets/case_studies/mission2.png" alt="case study 2" width="60%"/></p>
 
 **The competition Test Generators are only allowed to manipulate the obstacles in the environment.**
 For simplicity, we only consider box-shaped obstacles.
 An obstacle is defined by its size (length, width, height) and position in the simulation environment (x,y,z) in meters and its rotation angle in degrees.
 
 ```yaml
-# template-test.yaml
+# mission2.yaml
 simulation:
+  simulator: ros #{gazebo, jmavsim, ros} 
+  speed: 1
+  headless: true
   obstacles:
-  - size: # Object 1 size in l,w,h
-      l: 5
+  - size:
+      l: 10
       w: 5
-      h: 5
-    position: # Object 1 position in x,y,z and it's rotation
+      h: 20
+    position:
       x: 10
-      y: 5
+      y: 20
       z: 0
-      angle: 0
-  - size: # Object 2 size in l,w,h
-      l: 5
+      r: 0
+  - size:
+      l: 10
       w: 5
-      h: 5
-    position:  # Object 2 position in x,y,z and it's rotation
+      h: 20
+    position:
       x: -10
-      y: 5
+      y: 20
       z: 0
-      angle: 0
+      r: 0
 ```
 
 The below image shows the drone flight trajectory during the execution of the above test case:
 
-<p align="center"><img src="samples/tests/test1.png" alt="sample test plot" width="60%"/></p>
+<p align="center"><img src="snippets/case_studies/mission2-2.png" alt="case study 2" width="60%"/></p>
 
 ### Case Studies
 
@@ -190,8 +188,52 @@ These case studies include a predefined flight mission, relevant drone configura
 
 The test generators are then expected to place obstacles in the simulation environment, inside a predefined area.
 
-There have been a few [sample case studies](./case_studies/) provided to help you develop your test generators.
+There have been a few [sample case studies](./case_studies/) (similar to the above scenarios) provided to help you develop your test generators.
 Some other similar case studies will be used for evaluation.
+
+<!-- [mission2.yaml](snippets/case_studies/mission2.yaml):
+
+1. Taking off
+2. Heading forwrd towards the 1st waypoint point in about 50 meters ahead.
+3. Heading back towards the landing point in about 10 meters to the left of the take off position.
+4. Landing
+
+```yaml
+drone:
+  port: ros #{sitl, ros, cf}
+  params_file: case_studies/mission-params.csv 
+  mission_file: case_studies/mission2.plan
+
+simulation:
+  simulator: ros #{gazebo, jmavsim, ros} 
+  speed: 1
+  headless: true
+#   obstacles:
+#   - size:
+#       l: 10
+#       w: 5
+#       h: 20
+#     position:
+#       x: 10
+#       y: 20
+#       z: 0
+#       r: 0
+#   - size:
+#       l: 10
+#       w: 5
+#       h: 20
+#     position:
+#       x: -10
+#       y: 20
+#       z: 0
+#       r: 0
+
+test:
+  commands_file: case_studies/mission-commands.csv
+
+``` -->
+
+<!-- <p align="center"><img src="snippets/case_studies/mission2.png" alt="case study 2" width="50%"/><img src="snippets/case_studies/mission2-2.png" alt="case study 2" width="50%"/></p> -->
 
 ### UAV Test Generators
 

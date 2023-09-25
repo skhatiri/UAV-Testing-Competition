@@ -15,8 +15,8 @@
         "hoverSpeed": 5,
         "items": [
             {
-                "AMSLAltAboveTerrain": null,
-                "Altitude": 3,
+                "AMSLAltAboveTerrain": 10,
+                "Altitude": 10,
                 "AltitudeMode": 1,
                 "autoContinue": true,
                 "command": 22,
@@ -27,9 +27,9 @@
                     0,
                     0,
                     null,
-                    47.496095399999994,
-                    8.7327818,
-                    3
+                    47.3977419,
+                    8.545593799999999,
+                    10
                 ],
                 "type": "SimpleItem"
             },
@@ -46,17 +46,17 @@
                     0,
                     0,
                     null,
-                    47.4959457,
-                    8.732873099999999,
+                    47.39777168960068,
+                    8.546299317263333,
                     0
                 ],
                 "type": "SimpleItem"
             }
         ],
         "plannedHomePosition": [
-            47.49636519617687,
-            8.7327818,
-            443.0985387095848
+            47.39773803960678,
+            8.545595700982858,
+            488.7567016192512
         ],
         "vehicleType": 2,
         "version": 2
