@@ -188,7 +188,7 @@ These case studies include a predefined flight mission, relevant drone configura
 
 The test generators are then expected to place obstacles in the simulation environment, inside a predefined area.
 
-There have been a few [sample case studies](./case_studies/) (similar to the above scenarios) provided to help you develop your test generators.
+There have been a few [**sample case studies**](./snippets/case_studies/) (similar to the above scenarios) provided to help you develop your test generators.
 Some other similar case studies will be used for evaluation.
 
 <!-- [mission2.yaml](snippets/case_studies/mission2.yaml):
