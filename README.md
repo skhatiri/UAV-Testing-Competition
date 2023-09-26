@@ -331,6 +331,10 @@ The software we developed is distributed under MIT license. See the [license](./
 
 ## Contacts
 
+Feel free to use the [Discussions](https://github.com/skhatiri/UAV-Testing-Competition/discussions) section to ask your questions and look for answers.
+
+You can also contact us directly using email:
+
 - Sajad Khatiri (Zurich University of Applied Sciences) - <mazr@zhaw.ch>
 - Prasun Saurabh (Zurich University of Applied Sciences) - <sarr@zhaw.ch>
 - Timothy Zimmermann (Verity) - <timothy.zimmermann@outlook.com>
