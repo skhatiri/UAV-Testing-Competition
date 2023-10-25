@@ -19,7 +19,7 @@ class TestCase(object):
 
     def get_distances(self) -> List[float]:
         return [
-            self.trajectory.distance_to_obstacles([obst])
+            self.trajectory.min_distance_to_obstacles([obst])
             for obst in self.test.simulation.obstacles
         ]
 
