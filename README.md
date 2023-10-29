@@ -1,4 +1,4 @@
-# Unmanned Aerial Vehicle (UAV) Testing Competition
+# CPS-UAV: Unmanned Aerial Vehicle Testing Competition
 
 Unmanned Aerial Vehicles (UAVs) equipped with onboard cameras and various sensors have already demonstrated the possibility of autonomous flights in real environments, leading to great interest in various application scenarios: crop monitoring, surveillance, medical and food delivery.
 
