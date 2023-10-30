@@ -21,9 +21,9 @@ class RandomGenerator(object):
                 h=random.uniform(self.min_size.h, self.max_size.h),
             )
             position = Obstacle.Position(
-                x=random.uniform(self.min_position.r, self.max_position.x),
-                y=random.uniform(self.min_position.r, self.max_position.y),
-                z=random.uniform(self.min_position.r, self.max_position.z),
+                x=random.uniform(self.min_position.x, self.max_position.x),
+                y=random.uniform(self.min_position.y, self.max_position.y),
+                z=0,  # obstacles should always be place on the ground
                 r=random.uniform(self.min_position.r, self.max_position.r),
             )
             obstacle = Obstacle(size, position)
