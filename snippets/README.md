@@ -10,3 +10,4 @@ This can be speccifically useful when you are working on test generation approac
 4. Check [RandomGenerator](random_generator.py) class for a simple test generator that puts an obstacle with random size and position inside a givent case study mission.
 5. Develop your own test genrator based on the above samples. You can clone this repository and re-use all classes and case studies.
 6. Feel free to use the [discussion section]((https://github.com/skhatiri/UAV-Testing-Competition/discussions)) or contact the organizers to ask your questions.
+

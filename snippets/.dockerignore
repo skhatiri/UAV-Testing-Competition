@@ -1,9 +1,10 @@
 logs/
+results/
+generated_tests/
 tmp/
 .env
+k8s-config.yaml
 venv/
-snippets/results/
-snippets/generated_tests/
 .DS_Store
 .huskyrc.json
 out
@@ -35,6 +36,7 @@ languageServer.*/**
 bin/**
 obj/**
 .pytest_cache
+tmp/**
 .python-version
 .vs/
 .vscode/
@@ -47,4 +49,3 @@ debugpy*.log
 pydevd*.log
 nodeLanguageServer/**
 nodeLanguageServer.*/**
-.idea/

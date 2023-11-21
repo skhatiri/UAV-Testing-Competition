@@ -1,5 +1,12 @@
 # CPS-UAV: Unmanned Aerial Vehicle Testing Competition
 
+## Important Updates (21.11.2023)
+
+- **Submission requirements and guideline is now available. [Check Here](./docs/submission.md).**
+- **Make sure to review and integrate the recent updates to the [code samples](./snippets/) into your code where needed.**
+- **Make sure to pull/install the latest version of [Aerialist](https://github.com/skhatiri/Aerialist).**
+
+
 Unmanned Aerial Vehicles (UAVs) equipped with onboard cameras and various sensors have already demonstrated the possibility of autonomous flights in real environments, leading to great interest in various application scenarios: crop monitoring, surveillance, medical and food delivery.
 
 Over the years, support for UAV developers has increased with open-access projects for software and hardware such as the autopilot support provided by [PX4](https://github.com/PX4/PX4-Autopilot) and [Ardupilot](https://github.com/ArduPilot/ardupilot).
@@ -267,7 +274,7 @@ based on a given test. This tool internally uses Aerialist to evaluate the test 
 
 ### Submission
 
-Information on how to submit your test generators will be updated here.
+Follow the [Submission Guideline](./docs/submission.md), prepare your code as explained and send it to the organization committee.
 
 - **Submission Deadline**: By the end of November 2023
 
@@ -276,8 +283,7 @@ Information on how to submit your test generators will be updated here.
 The efficacy of the test generators will be assessed based on two crucial metrics: the number of failed cases
 and the diversity of the test scenarios.
 The first metric, the number of failed cases, serves as a straightforward
-indicator of the test's ability to uncover system weaknesses. A higher number of failures signifies a more effective 
-test generator in this context.
+indicator of the test's ability to uncover system weaknesses. A higher number of failures signifies a more effective test generator in this context.
 
 However, it is equally essential to consider the diversity of test cases.
 Diversifying the test scenarios is critical as it helps ensure that a wide spectrum of potential vulnerabilities is
