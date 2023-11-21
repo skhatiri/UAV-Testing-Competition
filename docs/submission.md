@@ -23,6 +23,7 @@ We ask all the competition participants to follow the following requiremnts and 
 - All test generators must be built on top of the functionalities available in the [TestCase](../snippets/testcase.py) class. This will make sure we can easily run your code in our evaluation infrastructure.
   - Speccifically, make sure to integrate the exact same options (see execute()) to change the test execution agent (local,docker,k8s) with an environment variable. We will use our own Kubernetes cluster to run the simulations.
   - **If you build on top of the given [TestCase](../snippets/testcase.py) class, you do not need to worry about the details.**
+- It could be possible that some of the test executions are problematic and does not yield to a proper logfile (trajectory). You are required to handle such execptions within your code, as the sample [random generator](../snippets/random_generator.py).
 
 ### Docker Image
 
