@@ -1,5 +1,10 @@
 # CPS-UAV: Unmanned Aerial Vehicle Testing Competition
 
+## Important Updates (28.11.2023)
+
+- **Sumbmission Deadline is extended to 7.12.2023.**
+- **Make Sure to follow the below requirements in your submission.**
+
 ## Important Updates (21.11.2023)
 
 - **Submission requirements and guideline is now available. [Check Here](./docs/submission.md).**
@@ -276,7 +281,7 @@ based on a given test. This tool internally uses Aerialist to evaluate the test 
 
 Follow the [Submission Guideline](./docs/submission.md), prepare your code as explained and send it to the organization committee.
 
-- **Submission Deadline**: By the end of November 2023
+- **Submission Deadline**: 7.12.2023 (extended)
 
 ### Evaluation
 
