@@ -1,5 +1,10 @@
 # CPS-UAV: Unmanned Aerial Vehicle Testing Competition
 
+## Important Updates (4.12.2023)
+
+- **Recent [Aerialist update](https://github.com/skhatiri/Aerialist/pull/14) lets you set a timeout period for simulations. After timeout is reached, simulation is aborted and you can access the flight log and plot of the unfinished test.**
+- **This can help with identifying the test cases that take too much time to finish, and before you were not able to check the logs to understand why.**
+
 ## Important Updates (28.11.2023)
 
 - **Sumbmission Deadline is extended to 7.12.2023.**
@@ -10,7 +15,6 @@
 - **Submission requirements and guideline is now available. [Check Here](./docs/submission.md).**
 - **Make sure to review and integrate the recent updates to the [code samples](./snippets/) into your code where needed.**
 - **Make sure to pull/install the latest version of [Aerialist](https://github.com/skhatiri/Aerialist).**
-
 
 Unmanned Aerial Vehicles (UAVs) equipped with onboard cameras and various sensors have already demonstrated the possibility of autonomous flights in real environments, leading to great interest in various application scenarios: crop monitoring, surveillance, medical and food delivery.
 
