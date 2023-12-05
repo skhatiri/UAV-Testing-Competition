@@ -7,7 +7,7 @@
 
 ## Important Updates (28.11.2023)
 
-- **Sumbmission Deadline is extended to 7.12.2023.**
+- **Sumbmission Deadline is extended to 7.12.2023 (AoE).**
 - **Make Sure to follow the below requirements in your submission.**
 
 ## Important Updates (21.11.2023)
