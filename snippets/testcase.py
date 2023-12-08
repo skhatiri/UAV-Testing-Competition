@@ -1,15 +1,19 @@
 import copy
 import logging
 from typing import List
+from decouple import config
 from aerialist.px4.drone_test import DroneTest, AgentConfig
 from aerialist.px4.obstacle import Obstacle
-from aerialist.px4.docker_agent import DockerAgent
-from aerialist.px4.k8s_agent import K8sAgent
-from aerialist.px4.local_agent import LocalAgent
 from aerialist.px4.trajectory import Trajectory
-from decouple import config
 
 AGENT = config("AGENT", default=AgentConfig.DOCKER)
+if AGENT == AgentConfig.LOCAL:
+    from aerialist.px4.local_agent import LocalAgent
+if AGENT == AgentConfig.DOCKER:
+    from aerialist.px4.docker_agent import DockerAgent
+if AGENT == AgentConfig.K8S:
+    from aerialist.px4.k8s_agent import K8sAgent
+
 logger = logging.getLogger(__name__)
 
 
