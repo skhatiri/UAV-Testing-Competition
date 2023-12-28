@@ -347,7 +347,17 @@ If you use this tool in your research, please cite the following papers:
   booktitle={2023 16th IEEE International Conference on Software Testing, Verification and Validation (ICST)},
   year={2023},
 }
+
+@inproceedings{icse2024Aerialist,
+  title={Simulation-based Testing of Unmanned Aerial Vehicles with Aerialist},
+  author={Khatiri, Sajad and Panichella, Sebastiano and Tonella, Paolo},
+  booktitle={ International Conference on Software Engineering (ICSE)},
+  year={2024},
+}
+
 ````
+
+
 
 ## License
 
