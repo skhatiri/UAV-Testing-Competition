@@ -341,6 +341,15 @@ If you use this tool in your research, please cite the following papers:
   - [Preprint](https://skhatiri.ir/papers/surrealist.pdf)
 
 ````{code-block} bibtex
+@inproceedings{SBFT-UAV2024,
+  author       = {Sajad Khatiri and Prasun Saurabh and Timothy Zimmermann and Charith Munasinghe and Christian Birchler and Sebastiano Panichella},
+  title        = {{SBFT} Tool Competition 2024 - CPS-UAV Test Case Generation Track},
+  booktitle    = {{IEEE/ACM} International Workshop on Search-Based and Fuzz Testing,
+                  SBFT@ICSE 2024},
+  year         = {2024}
+}
+
+
 @inproceedings{khatiri2023simulation,
   title={Simulation-based test case generation for unmanned aerial vehicles in the neighborhood of real flights},
   author={Khatiri, Sajad and Panichella, Sebastiano and Tonella, Paolo},
