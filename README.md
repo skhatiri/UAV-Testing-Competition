@@ -338,7 +338,7 @@ This ensures a fair and comprehensive evaluation of the generated tests, allowin
 If you use this tool in your research, please cite the following papers:
 
 - **Sajad Khatiri**, Sebastiano Panichella, and Paolo Tonella, "Simulation-based Test Case Generation for Unmanned Aerial Vehicles in the Neighborhood of Real Flights," *In 2023 IEEE 16th International Conference on Software Testing, Verification and Validation (ICST)*
-  - [Preprint](https://skhatiri.ir/papers/surrealist.pdf)
+  - [Link]([https://skhatiri.ir/papers/surrealist.pdf](https://ieeexplore.ieee.org/document/10132225))
 
 ````{code-block} bibtex
 @inproceedings{SBFT-UAV2024,
