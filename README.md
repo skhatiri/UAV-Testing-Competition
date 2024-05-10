@@ -333,36 +333,42 @@ This ensures a fair and comprehensive evaluation of the generated tests, allowin
 
 If you use this tool in your research, please cite the following papers:
 
+- **Sajad Khatiri**, Sebastiano Panichella, and Paolo Tonella, "Simulation-based Testing of Unmanned Aerial Vehicles with Aerialist," *In 2024 International Conference on Software Engineering (ICSE)*
+  - [Preprint](https://skhatiri.ir/papers/aerialist.pdf)
+
+  ````{code-block} bibtex
+  @inproceedings{icse2024Aerialist,
+    title={Simulation-based Testing of Unmanned Aerial Vehicles with Aerialist},
+    author={Khatiri, Sajad and Panichella, Sebastiano and Tonella, Paolo},
+    booktitle={International Conference on Software Engineering (ICSE)},
+    year={2024},
+  }
+  ````
+
+- **Sajad Khatiri**, Prasun Saurabh, Timothy Zimmermann, Charith Munasinghe, Christian Birchler, and Sebastiano Panichella, "SBFT Tool Competition 2024 - CPS-UAV Test Case Generation Track," *In 2024 IEEE/ACM International Workshop on Search-Based and Fuzz Testing*
+  - [Link](reports/UAV_Competition_SBFT_2024.pdf)
+
+  ````{code-block} bibtex
+  @inproceedings{SBFT-UAV2024,
+    author       = {Sajad Khatiri and Prasun Saurabh and Timothy Zimmermann and Charith Munasinghe and Christian Birchler and Sebastiano Panichella},
+    title        = {{SBFT} Tool Competition 2024 - CPS-UAV Test Case Generation Track},
+    booktitle    = {{IEEE/ACM} International Workshop on Search-Based and Fuzz Testing,
+                    SBFT@ICSE 2024},
+    year         = {2024}
+  }
+  ````
+
 - **Sajad Khatiri**, Sebastiano Panichella, and Paolo Tonella, "Simulation-based Test Case Generation for Unmanned Aerial Vehicles in the Neighborhood of Real Flights," *In 2023 IEEE 16th International Conference on Software Testing, Verification and Validation (ICST)*
   - [Link](https://ieeexplore.ieee.org/document/10132225)
 
-````{code-block} bibtex
-@inproceedings{SBFT-UAV2024,
-  author       = {Sajad Khatiri and Prasun Saurabh and Timothy Zimmermann and Charith Munasinghe and Christian Birchler and Sebastiano Panichella},
-  title        = {{SBFT} Tool Competition 2024 - CPS-UAV Test Case Generation Track},
-  booktitle    = {{IEEE/ACM} International Workshop on Search-Based and Fuzz Testing,
-                  SBFT@ICSE 2024},
-  year         = {2024}
-}
-
-
-@inproceedings{khatiri2023simulation,
-  title={Simulation-based test case generation for unmanned aerial vehicles in the neighborhood of real flights},
-  author={Khatiri, Sajad and Panichella, Sebastiano and Tonella, Paolo},
-  booktitle={2023 16th IEEE International Conference on Software Testing, Verification and Validation (ICST)},
-  year={2023},
-}
-
-@inproceedings{icse2024Aerialist,
-  title={Simulation-based Testing of Unmanned Aerial Vehicles with Aerialist},
-  author={Khatiri, Sajad and Panichella, Sebastiano and Tonella, Paolo},
-  booktitle={ International Conference on Software Engineering (ICSE)},
-  year={2024},
-}
-
-````
-
-
+  ````{code-block} bibtex
+  @inproceedings{khatiri2023simulation,
+    title={Simulation-based test case generation for unmanned aerial vehicles in the neighborhood of real flights},
+    author={Khatiri, Sajad and Panichella, Sebastiano and Tonella, Paolo},
+    booktitle={2023 16th IEEE International Conference on Software Testing, Verification and Validation (ICST)},
+    year={2023},
+  }
+  ````
 
 ## License
 
