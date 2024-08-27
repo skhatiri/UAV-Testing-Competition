@@ -37,7 +37,7 @@ The UAV Testing Competition organized jointly by the [International Conference o
 This year, we are extending the competition to [ICST](https://conf.researchr.org/home/icst-2025), while still organizing it at [SBFT](https://sbft24.github.io/).
 
 The competition call, deadlines, guideline and evaluation will be identicall for the two calls.
-You will have the option to choose where you want to participate and compete against the other competitors.
+You will have the option to choose where you want to participate and compete against the other competitors who applied for the same venue.
 
 **Take a look at the [report of the previous edition](/reports/UAV_Competition_SBFT_2024.pdf) to get familiar with the process.**
 
