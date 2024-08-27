@@ -2,10 +2,10 @@
 
 Unmanned Aerial Vehicles (UAVs) equipped with onboard cameras and various sensors have already demonstrated the possibility of autonomous flights in real environments, leading to great interest in various application scenarios: crop monitoring, surveillance, medical and food delivery.
 
-Over the years, support for UAV developers has increased with open-access projects for software and hardware such as the autopilot support provided by [PX4](https://github.com/PX4/PX4-Autopilot) and [Ardupilot](https://github.com/ArduPilot/ardupilot).
+Over the years, support for UAV developers has increased with open-access projects for software and hardware, such as the autopilot support provided by [PX4](https://github.com/PX4/PX4-Autopilot) and [Ardupilot](https://github.com/ArduPilot/ardupilot).
 However, despite the necessity of systematically testing such complex and automated systems to ensure their safe operation in real-world environments, there has been relatively limited investment in this direction so far.
 
-The UAV Testing Competition organized jointly by the [International Conference on Software Testing, Verification and Validation (ICST)](https://conf.researchr.org/home/icst-2025) and [Search-Based and Fuzz Testing (SBFT) workshop](https://sbft25.github.io/) is an initiative designed to inspire and encourage the Software Testing Community to direct their attention toward UAVs as a rapidly emerging and crucial domain. The initiative is also meant for reducing for interested authors/participants to reduce travel cost by selecting the most convenient and close venue. In a practical sense, this means that participants/authors of the competition have to specify to what venue (ICST or SBFT) are sending their tool(s).  
+The UAV Testing Competition organized jointly by the [International Conference on Software Testing, Verification and Validation (ICST)](https://conf.researchr.org/home/icst-2025) and [Search-Based and Fuzz Testing (SBFT) workshop](https://sbft25.github.io/) is an initiative designed to inspire and encourage the Software Testing Community to direct their attention toward UAVs as a rapidly emerging and crucial domain. The joint call is meant to help interested authors/participants reduce travel costs by selecting the most convenient and close venue.
 
 ## Table of Contents
 
@@ -36,7 +36,7 @@ The UAV Testing Competition organized jointly by the [International Conference o
 
 This year, we are extending the competition to [ICST](https://conf.researchr.org/home/icst-2025), while still organizing it at [SBFT](https://sbft24.github.io/).
 
-The competition call, deadlines, guideline and evaluation will be identicall for the two calls.
+The competition call, deadlines, guidelines, and evaluation, will be identical for the two calls.
 You will have the option to choose where you want to participate and compete against the other competitors who applied for the same venue.
 
 **Take a look at the [report of the previous edition](/reports/UAV_Competition_SBFT_2024.pdf) to get familiar with the process.**
@@ -49,12 +49,12 @@ Multiple studies have proven that many UAV bugs can be potentially detected befo
 
 However, the *engineering complexity* of UAVs and their test environments, and the difficulty of setting up *realistic-enough* simulation environments that can capture the same bugs as physical tests represent relevant obstacles.
 
-In the first edition of the UAV Testing Competition, we aim to provide software testing researchers with a simple platform to facilitate their onboarding in the UAV domain. Using the provided platform and case study, the goal is to use search-based techniques for generating challenging test cases for autonomous vision-based UAV navigation systems.
+In the first edition of the UAV Testing Competition, we aim to provide software testing researchers with a simple platform to facilitate their onboarding in the UAV domain. Using the provided platform and case study, the goal is to use search-based techniques to generate challenging test cases for autonomous vision-based UAV navigation systems.
 
 - The [Software Under Test](#software-under-test) is [PX4-Avoidance](https://github.com/PX4/PX4-Avoidance), a vision-based autonomous obstacle avoidance system developed on top of [PX4-Autopilot](https://github.com/PX4/PX4-Autopilot).
 
 - We create challenging scenarios for PX4-Avoidance by placing static obstacles on the UAV's path.
-- The ultimate goal is to find some specific obstacle configurations (size, position) that could lead to a crash or unsafe flight by the autopilot, as seen in the below image.
+- The ultimate goal is to find some specific obstacle configurations (size, position) that could lead to a crash or unsafe flight by the autopilot, as seen in the image below.
 
 <p align="center"><img src="snippets/case_studies/mission2-failing.png" alt="sample test plot" width="60%"/></p>
 
@@ -89,7 +89,7 @@ Developers and researchers often use PX4 as a foundation for creating and testin
 
 - **[PX4 Avoidance](https://github.com/PX4/PX4-Avoidance)** :
 PX4 Avoidance is a software module in the PX4 Autopilot ecosystem that provides obstacle detection and avoidance capabilities.
-PX4 Avoidance uses various sensors and algorithms to help UAVs navigate and avoid obstacles in their environment. It allows UAVs to detect obstacles such as buildings, trees, and other objects in their flight path and make adjustments to their flight path to avoid collisions or navigate around these obstacles safely.
+PX4 Avoidance uses various sensors and algorithms to help UAVs navigate and avoid obstacles in their environment. It allows UAVs to detect obstacles such as buildings, trees, and other objects in the path and adjust their flight path to avoid collisions and navigate safely around these obstacles.
 Overall, PX4 Avoidance is a critical component for ensuring the safe and reliable operation of UAVs in complex and dynamic environments.
 
 - **[PX4 Flight Logs](https://docs.px4.io/main/en/log/flight_log_analysis.html)**:
@@ -105,7 +105,7 @@ Gazebo simulates the physical properties and dynamics of the UAV and its surroun
 [Aerialist](https://github.com/skhatiri/Aerialist) (unmanned AERIAL vehIcle teST bench) is a novel test bench for UAV software that automates all the necessary UAV testing steps: setting up the test environment, building and running the UAV firmware code, configuring the simulator with the simulated world properties, connecting the simulated UAV to the firmware and applying proper UAV configurations at startup, scheduling and executing runtime commands, monitoring the UAV at runtime for any issues, and extracting the flight log file after the test completion.
 
 With Aerialist, we aim to provide the competition participants with an easy platform to automate tests on the simulated UAVs, allowing them to do experiments required to overcome the UAV simulation-based testing challenges.
-**The Test Generators submited to the competition are required to build on top of Aerialist to simplify the evaluation process.**
+**The Test Generators submitted to the competition are required to build on top of Aerialist to simplify the evaluation process.**
 Check [Aeialist's Documentation](https://github.com/skhatiri/Aerialist) for more details on the usage.  
 
 ## Test Generation
@@ -186,7 +186,7 @@ The below image shows the drone flight trajectory during the execution of the ab
 The input to the test generators are some simple test cases, without any obstacles in the simulation environment.
 These case studies include a predefined flight mission, relevant drone configurations, simulation configurations, and relevant commands to start the autonomous mission.
 
-The test generators are then expected to place obstacles in the simulation environment, inside a predefined area.
+The test generators are then expected to place obstacles inside a predefined area in the simulation environment.
 
 A few [**sample case studies**](./snippets/case_studies/) (similar to the above scenarios) are provided to help you develop your test generators.
 Some other similar case studies will be used for evaluation.
@@ -223,11 +223,11 @@ based on a given test. This tool internally uses Aerialist to evaluate the test 
 
 ## Competition Guideline
 
-Please read the [report of the previous edition](/reports/UAV_Competition_SBFT_2024.pdf) in details to gain better understanding of the competition guideline, evaluation criteria and process. Some details may change in the new edition (e.g., the evaluation metrics).
+Please read the [report of the previous edition](/reports/UAV_Competition_SBFT_2024.pdf) in detail to gain a better understanding of the competition guidelines, evaluation criteria, and process. Some details may vary in the new edition (e.g., the evaluation metrics).
 
 ### Submission
 
-Follow the [Submission Guideline](./docs/submission.md), prepare your code as explained and send it to the organization committee.
+Follow the [Submission Guideline](./docs/submission.md), prepare your code as explained, and send it to the organization committee.
 
 You can freely decide on the venue you want to compete in: **ICST 2025 or SBFT@ICSE 2025**.
 Participants in each venue will be evaluated and ranked independently.
@@ -250,7 +250,7 @@ might otherwise go undetected.
 The following metrics will be used to evaluate the tests generated by the tools developed:
 
 - Fault Detection (Test Failure): The test cases will be evaluated for fault detection.
-- Testing Budget: A testing budget will be allocated for generating the test cases.
+- Testing Budget: A testing budget will be allocated to generate the test cases.
 - Test Diversity: Diversity in the test will be valued more.
 - Simplicity: Faults found in less complicated environments (fewer obstacles) will be valued more.
 
@@ -262,7 +262,7 @@ test executions.
 
 - When a single test case is concurrently simulated 5 or 10 times, it draws upon 5 or 10 executions from the budget.
 
-- Developers hold the responsibility for optimizing their utilization of this allocated budget. -->
+- Developers are responsible for optimizing the utilization of this allocated budget. -->
 
 <!-- ### Baselines
 
@@ -274,7 +274,7 @@ This ensures a fair and comprehensive evaluation of the generated tests, allowin
 
 ## Previous Editions
 
-The competitions has been held in the following editions
+The competition has been held in the following editions:
 
 - **1<sup>st</sup> Edition**: SBFT@ICSE 2024
   - [Competition Call](https://github.com/skhatiri/UAV-Testing-Competition/tree/SBFT2024)
@@ -333,7 +333,7 @@ The software we developed is distributed under MIT license. See the [license](./
 
 ## Contacts
 
-A list of FAQs are answered [here](/docs/Q&A.md).
+A list of FAQs is answered [here](/docs/Q&A.md).
 
 Feel free to use the [Discussions](https://github.com/skhatiri/UAV-Testing-Competition/discussions) section to ask your questions and look for answers.
 
