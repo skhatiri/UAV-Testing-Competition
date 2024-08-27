@@ -1,11 +1,11 @@
-# CPS-UAV: Unmanned Aerial Vehicle Testing Competition
+# UAV Testing Competition
 
 Unmanned Aerial Vehicles (UAVs) equipped with onboard cameras and various sensors have already demonstrated the possibility of autonomous flights in real environments, leading to great interest in various application scenarios: crop monitoring, surveillance, medical and food delivery.
 
 Over the years, support for UAV developers has increased with open-access projects for software and hardware such as the autopilot support provided by [PX4](https://github.com/PX4/PX4-Autopilot) and [Ardupilot](https://github.com/ArduPilot/ardupilot).
 However, despite the necessity of systematically testing such complex and automated systems to ensure their safe operation in real-world environments, there has been relatively limited investment in this direction so far.
 
-The UAV Testing Competition organized by the [Search-Based and Fuzz Testing (SBFT) workshop](https://sbft24.github.io/) is an initiative designed to inspire and encourage the Software Testing Community to direct their attention toward UAVs as a rapidly emerging and crucial domain.
+The UAV Testing Competition organized jointly by the [International Conference on Software Testing, Verification and Validation (ICST)](https://conf.researchr.org/home/icst-2025) and [Search-Based and Fuzz Testing (SBFT) workshop](https://sbft24.github.io/) is an initiative designed to inspire and encourage the Software Testing Community to direct their attention toward UAVs as a rapidly emerging and crucial domain.
 
 ## Table of Contents
 
@@ -23,29 +23,25 @@ The UAV Testing Competition organized by the [Search-Based and Fuzz Testing (SBF
   - [Submission](#submission)
   - [Evaluation](#evaluation)
   <!-- - [Baselines](#baselines) -->
+- [Previous Editions](#previous-editions)
 - [References](#references)
 - [License](#license)
 - [Contacts](#contacts)
   
 ## Announcements
 
-### Evaluation Report and Ranking
+### 2<sup>nd</sup> Edition at ICST/SBFT 2025
 
-The competition report and the ranking is out. Here is the overal ranking, while more details can be found in the competition report ([preprint](reports/UAV_Competition_SBFT_2024.pdf)).
+*The UAV Testing competition is back on!*
 
-| Tool Name        | #obst.     | CS2 |       | CS3 |       | CS4 |       | CS5 |       | CS6 |       | CS7 |       | Rank Sum  | Score Sum  | Final Rank  |
-|------------------|------------|-----|-------|-----|-------|-----|-------|-----|-------|-----|-------|-----|-------|-----------|------------|-------------|
-|                  |            | #   | score | #   | score | #   | score | #   | score | #   | score | #   | score |           |            |             |
-| WOGAN-UAV        | 3          | 61  | 12,55 | 72  | 14,00 | 81  | 2,35  | 39  | 8,40  | 71  | 4,81  | 90  | 11,57 | 12        | 53,69      | 1           |
-| TUMB             | [1-4]      | 69  | 0,12  | 113 | 15,59 | 135 | 7,12  | 114 | 2,73  | 151 | 15,32 | 125 | 11,12 | 16        | 52,00      | 2           |
-| CAMBA            | 2          | 36  | 11,84 | 30  | 8,50  | 33  | 0,00  | 11  | 3,16  | 102 | 12,92 | 22  | 4,69  | 18        | 41,11      | 3           |
-| DeepHyperion-UAV | 2          | 2   | 1,22  | 28  | 8,31  | 10  | 7,74  | 22  | 1,08  | 7   | 0,00  | 14  | 2,96  | 28        | 21,31      | 4           |
-| AmbiGen          | [1-4]      | 30  | 2,82  | 46  | 2,00  | 36  | 0,86  | 65  | 1,22  | 151 | 10,07 | 30  | 1,51  | 26,00     | 18,47      | 5           |
-| Surrealist       | 2          | 10  | 5,03  | 1   | 0,00  | 10  | 0,00  | 1   | 0,75  | 19  | 3,88  | 2   | 0,00  | 34        | 9,67       | 6           |
-| TAIiST           | [2-4]      | 7   | 0,81  | 13  | 0,00  | 6   | 0,43  | 11  | 1,57  | 29  | 1,67  | 22  | 1,33  | 33        | 5,81       | 7           |
-| **SUM**          |            | 215 | 34,40 | 303 | 48,39 | 311 | 18,51 | 263 | 18,91 | 530 | 48,67 | 305 | 33,19 |           |            |             |
+This year, we are extending the competition to [ICST](https://conf.researchr.org/home/icst-2025), while still organizing it at [SBFT]((https://sbft24.github.io/)).
 
-**You can find previous announcements and updates [here](docs/updates.md)**.
+The competition call, deadlines, guideline and evaluation will be identicall for the two calls.
+You will have the option to choose where you want to participate and compete against the other competitors.
+
+**Take a look at the [report of the previous edition](/reports/UAV_Competition_SBFT_2024.pdf) to get familiar with the process.**
+
+**You can find previous announcements and updates [here](docs/updates.md).**
 
 ## Overview
 
@@ -133,33 +129,15 @@ Using a predefined [test-description yaml file](snippets/case_studies/) is the e
 ```yaml
 # mission2.yaml
 drone:
-  port: ros #{sitl, ros, cf}
+  port: ros 
   params_file: case_studies/mission-params.csv 
   mission_file: case_studies/mission2.plan
 
 simulation:
-  simulator: ros #{gazebo, jmavsim, ros} 
+  simulator: ros 
   speed: 1
   headless: true
-  # obstacles:
-  # - size:
-  #     l: 10
-  #     w: 5
-  #     h: 20
-  #   position:
-  #     x: 10
-  #     y: 20
-  #     z: 0
-  #     r: 0
-  # - size:
-  #     l: 10
-  #     w: 5
-  #     h: 20
-  #   position:
-  #     x: -10
-  #     y: 20
-  #     z: 0
-  #     r: 0
+  # no obstacles
 
 test:
   commands_file: case_studies/mission-commands.csv
@@ -173,8 +151,9 @@ An obstacle is defined by its size (length, width, height) and position in the s
 
 ```yaml
 # mission2.yaml
+# updated simulation settings in the previous sample
 simulation:
-  simulator: ros #{gazebo, jmavsim, ros} 
+  simulator: ros 
   speed: 1
   headless: true
   obstacles:
@@ -209,52 +188,8 @@ These case studies include a predefined flight mission, relevant drone configura
 
 The test generators are then expected to place obstacles in the simulation environment, inside a predefined area.
 
-There have been a few [**sample case studies**](./snippets/case_studies/) (similar to the above scenarios) provided to help you develop your test generators.
+A few [**sample case studies**](./snippets/case_studies/) (similar to the above scenarios) are provided to help you develop your test generators.
 Some other similar case studies will be used for evaluation.
-
-<!-- [mission2.yaml](snippets/case_studies/mission2.yaml):
-
-1. Taking off
-2. Heading forwrd towards the 1st waypoint point in about 50 meters ahead.
-3. Heading back towards the landing point in about 10 meters to the left of the take off position.
-4. Landing
-
-```yaml
-drone:
-  port: ros #{sitl, ros, cf}
-  params_file: case_studies/mission-params.csv 
-  mission_file: case_studies/mission2.plan
-
-simulation:
-  simulator: ros #{gazebo, jmavsim, ros} 
-  speed: 1
-  headless: true
-#   obstacles:
-#   - size:
-#       l: 10
-#       w: 5
-#       h: 20
-#     position:
-#       x: 10
-#       y: 20
-#       z: 0
-#       r: 0
-#   - size:
-#       l: 10
-#       w: 5
-#       h: 20
-#     position:
-#       x: -10
-#       y: 20
-#       z: 0
-#       r: 0
-
-test:
-  commands_file: case_studies/mission-commands.csv
-
-``` -->
-
-<!-- <p align="center"><img src="snippets/case_studies/mission2.png" alt="case study 2" width="50%"/><img src="snippets/case_studies/mission2-2.png" alt="case study 2" width="50%"/></p> -->
 
 ### UAV Test Generators
 
@@ -271,9 +206,11 @@ The generated test cases (following the Aerialist test case modeling) should res
 - The obstacle configurations are expected to keep the flight mission physically feasible.
   - The test cases that make it impossible for the UAV to find its path (e.g., creating a long wall among the drone path) while there is no hard or soft fail are considered **Invalid**.
 
+- The obstacles must be taller than the drone flight height (height > 10m)
+
 - All the obstacles are expected to **fit in a given rectangular area** as stated in the case study.
 
-- There can be **up to 4 obstacles** in each test case.
+- There can be **up to 3 obstacles** in each test case.
 
 - Obstacles **must not collide** with each other, and they must be placed directly on the ground (z=0).
 
@@ -286,11 +223,17 @@ based on a given test. This tool internally uses Aerialist to evaluate the test 
 
 ## Competition Guideline
 
+Please read the [report of the previous edition](/reports/UAV_Competition_SBFT_2024.pdf) in details to gain better understanding of the competition guideline, evaluation criteria and process. Some details may change in the new edition (e.g., the evaluation metrics).
+
 ### Submission
 
 Follow the [Submission Guideline](./docs/submission.md), prepare your code as explained and send it to the organization committee.
 
-- **Submission Deadline**: 7.12.2023 (extended)
+You can freely decide on the venue you want to compete in: **ICST 2025 or SBFT@ICSE 2025**.
+Participants in each venue will be evaluated and ranked independently.
+
+- **Submission Deadline**: 17.11.2024 (AoE)
+- **Notification**: 15.12.2024 (AoE)
 
 ### Evaluation
 
@@ -328,6 +271,20 @@ The test cases generated by the competitors will be evaluated against the tests 
 
 Surrealist, serving as the benchmark test generator, will provide a reference point against which the competitors' test cases can be compared.
 This ensures a fair and comprehensive evaluation of the generated tests, allowing for a well-informed assessment of their quality and effectiveness in identifying vulnerabilities within the PX4 avoidance system. -->
+
+## Previous Editions
+
+The competitions has been held in the following editions
+
+- **1<sup>st</sup> Edition**: SBFT@ICSE 2024
+  - [Competition Call](https://github.com/skhatiri/UAV-Testing-Competition/tree/SBFT2024)
+  - [Competition Ranking](https://github.com/skhatiri/UAV-Testing-Competition/tree/SBFT2024-Results#evaluation-report-and-ranking)
+  - [Competition Report](reports/UAV_Competition_SBFT_2024.pdf)
+
+- **2<sup>nd</sup> Edition**: ICST 2025 and SBFT@ICSE 2025
+  - [Competition Call](#uav-testing-competition)
+  - Competition Ranking (TBD)  
+  - Competition Report (TBD)  
 
 ## References
 
@@ -376,13 +333,14 @@ The software we developed is distributed under MIT license. See the [license](./
 
 ## Contacts
 
+A list of FAQs are answered [here](/docs/Q&A.md).
+
 Feel free to use the [Discussions](https://github.com/skhatiri/UAV-Testing-Competition/discussions) section to ask your questions and look for answers.
 
 You can also contact us directly using email:
 
-- Sajad Khatiri (Zurich University of Applied Sciences) - <mazr@zhaw.ch>
-- Prasun Saurabh (Zurich University of Applied Sciences) - <sarr@zhaw.ch>
-- Timothy Zimmermann (Verity) - <timothy.zimmermann@outlook.com>
-- Charith Munasinghe (Zurich University of Applied Sciences) - <mung@zhaw.ch>
-- Christian Birchler (Zurich University of Applied Sciences) - <birc@zhaw.ch>
-- Dr. Sebastiano Panichella (Zurich University of Applied Sciences) - <panc@zhaw.ch>
+- Sajad Khatiri (Università della Svizzera italiana) - <mazras@usi.ch>
+- Prasun Saurabh (Università della Svizzera italiana) - <saurap@usi.ch>
+- Tahereh Zohdinasab (Università della Svizzera italiana) - <tahereh.zohdinasab@usi.ch>
+- Dmytro Humeniuk (École Polytechnique de Montréal) - <dmytro.humeniuk@polymtl.ca>
+- Sebastiano Panichella (University of Bern) - <spanichella@gmail.com>
