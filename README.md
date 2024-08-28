@@ -181,19 +181,9 @@ The below image shows the drone flight trajectory during the execution of the ab
 
 <p align="center"><img src="snippets/case_studies/mission2-2.png" alt="case study 2" width="60%"/></p>
 
-### Case Studies
 
-The input to the test generators are some simple test cases, without any obstacles in the simulation environment.
-These case studies include a predefined flight mission, relevant drone configurations, simulation configurations, and relevant commands to start the autonomous mission.
 
-The test generators are then expected to place obstacles inside a predefined area in the simulation environment.
-
-A few [**sample case studies**](./snippets/case_studies/) (similar to the above scenarios) are provided to help you develop your test generators.
-Some other similar case studies will be used for evaluation.
-
-Each case study specifies a trajectory for the UAV to follow, along with the drone and simulation configurations. The drone trajectory is defined in the ```.plan``` file.
-
-### Test Requirements
+### Test Case Requirements
 
 Each obstacle in the test case is the defined by the following properties:
 x, y, z coordinates of the obstacle's center, length *(l)*, width *(w)*, height *(h)* of the obstacle, and the rotation angle of the obstacle *(r)*. The z-corrdinate of the obstacle is fixed to be 0. The values of the other properties are expected to be within the following ranges:
@@ -218,7 +208,17 @@ as stated in the case study.
 They must be placed directly on the ground (𝑧 = 0), be taller
 than the UAV flight height (ℎ > 10𝑚), and must not overlap.
 
+### Case Studies
 
+The input to the test generators are some simple test cases, without any obstacles in the simulation environment.
+These case studies include a predefined flight mission, relevant drone configurations, simulation configurations, and relevant commands to start the autonomous mission.
+
+The test generators are then expected to place obstacles inside a predefined area in the simulation environment.
+
+A few [**sample case studies**](./snippets/case_studies/) (similar to the above scenarios) are provided to help you develop your test generators.
+Some other similar case studies will be used for evaluation.
+
+Each case study specifies a trajectory for the UAV to follow, along with the drone and simulation configurations. The drone trajectory is defined in the ```.plan``` file.
 
 
 ### UAV Test Generators
@@ -233,6 +233,9 @@ The generated test cases (following the Aerialist test case modeling) should res
   - A test execution is considered a **Hard Fail** if there is a collision with any of the obstacles in the environment.
   - A test execution is considered a **Soft Fail** if the drone does not maintain a minimum safe distance of **1.5 m** to the surrounding obstacles.
 
+
+The developped test generators should encourage the failing test cases (hard fail or soft fail).
+<!-- 
 - The obstacle configurations are expected to keep the flight mission physically feasible.
   - The test cases that make it impossible for the UAV to find its path (e.g., creating a long wall among the drone path) while there is no hard or soft fail are considered **Invalid**.
 
@@ -242,7 +245,7 @@ The generated test cases (following the Aerialist test case modeling) should res
 
 - There can be **up to 3 obstacles** in each test case.
 
-- Obstacles **must not collide** with each other, and they must be placed directly on the ground (z=0).
+- Obstacles **must not collide** with each other, and they must be placed directly on the ground (z=0). -->
 
 A sample test generator using a random approach is documented and made available [here](./snippets/)
 <!-- 
@@ -250,6 +253,7 @@ A sample test generator using a random approach is documented and made available
 generation approach for UAV software. It provides an implementation for different testing goals like replication of 
 real-world tests in simulation, generating non-deterministic test cases, and generating more challenging test cases
 based on a given test. This tool internally uses Aerialist to evaluate the test cases. -->
+Due to the computational complexity of evaluation, we ask all the participats to rank their test cases based on their performance i.e. the submitted test generator should return the tests cases in the decreasing order of their quality accordig to the authors' evaluation. We will use this ranking to prioritize the execution of the test cases in the evaluation process. We decribe the critera for the evaluation of the test cases in the [Evaluation](#evaluation) section.
 
 ## Competition Guideline
 
@@ -311,7 +315,7 @@ trajectories (among the 5 simulations). The penalty term for similarity (```sim_
 
 The final score for all the tests generated will be multiplied by this similarity penalty term.
 
-Due to the computational complexity of evaluation, we ask all the participats to rank their test cases based on their performance i.e. the submitted test generator should return the tests cases in the decreasing order of their quality accordig to the authors' evalaution. We will use this ranking to prioritize the execution of the test cases in the evaluation process.
+
 
 <!-- ***In order to rank the generated tests, We will run 10 times the final test for evaluation
 Fault Detection Probability.***
