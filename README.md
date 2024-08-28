@@ -191,6 +191,36 @@ The test generators are then expected to place obstacles inside a predefined are
 A few [**sample case studies**](./snippets/case_studies/) (similar to the above scenarios) are provided to help you develop your test generators.
 Some other similar case studies will be used for evaluation.
 
+Each case study specifies a trajectory for the UAV to follow, along with the drone and simulation configurations. The drone trajectory is defined in the ```.plan``` file.
+
+### Test Requirements
+
+Each obstacle in the test case is the defined by the following properties:
+x, y, z coordinates of the obstacle's center, length, width, height of the obstacle, and the rotation angle of the obstacle. The z-corrdinate of the obstacle is fixed to be 0. The values of the other properties are expected to be within the following ranges:
+<div align="center">
+
+|     x     |    y     |    l    |    w    |    h    |    r    |
+|:---------:|:--------:|:-------:|:-------:|:-------:|:-------:|
+|  -40-30   |  10-40   |  2-20   |  2-20   |  10-25  |  0-90   |
+
+</div>
+
+The number of obstacles is limited to 3 in each test case. Test cases with fewer obstacles and resuting in a failure are valued more, than the failed test cases with more obstacles. Priority is given to the test cases with 2 or fewer obstacles, and the test cases with 3 obstacles are considered less valuable as they are expected to be easier to fail.
+
+The generated tests should follow the following constraints:
+- The obstacle configurations are expected to keep the mission
+physically feasible. The test cases that make it impossible for
+the UAV to find its path (e.g., by creating a long wall on the
+path) without any safety violation are considered invalid.
+- All obstacles are expected to fit in a given rectangular area
+as stated in the case study.
+- At maximum three obstacles can be placed in the environment.
+They must be placed directly on the ground (𝑧 = 0), be taller
+than the UAV flight height (ℎ > 10𝑚), and must not overlap.
+
+
+
+
 ### UAV Test Generators
 
 Given a simulated test case configuration for autonomous flight (above-mentioned case studies), the goal is to generate a more challenging simulated test case by introducing obstacles to the environment, to force the UAV to get too close to the obstacles (\ i.e. having a distance below a predefined safety threshold) while still completing the mission.
