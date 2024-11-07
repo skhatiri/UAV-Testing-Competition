@@ -1,5 +1,6 @@
 import json
 import matplotlib.pyplot as plt
+import utils
 
 class DroneMissionPlan:
     def __init__(self, json_data):
@@ -32,7 +33,7 @@ class DroneMissionPlan:
         }
         return mission_details
     
-    def get_mission_items(self):
+    def get_mission_items3D(self):
         items_details = []
         for item in self.items:
             # Check that latitude and longitude are not None
@@ -42,14 +43,28 @@ class DroneMissionPlan:
             
             if lat is not None and lon is not None:
                 item_details = {
-                    "Command": item.get("command"),
                     "Latitude": lat,
                     "Longitude": lon,
                     "Altitude": alt,
-                    "Altitude Mode": item.get("AltitudeMode"),
                 }
                 items_details.append(item_details)
         return items_details
+    
+    def get_mission_items2D(self):
+        cartesian_waypoints = []
+        # Get the mission items in 3D
+        waypoints = self.get_mission_items3D()
+        origin_lat = waypoints[0]["Latitude"]
+        origin_lon = waypoints[0]["Longitude"]
+
+        for waypoint in waypoints:
+            x, y = utils.latlon_to_cartesian(waypoint["Latitude"], waypoint["Longitude"], origin_lat, origin_lon)
+            cartesian_waypoints.append({
+                "x": x,
+                "y": y,
+            })
+        return cartesian_waypoints
+
 
     def display_mission_summary(self):
         print("Mission Summary:")
@@ -61,13 +76,13 @@ class DroneMissionPlan:
         print(f"Vehicle Type: {self.vehicle_type}")
         print(f"Planned Home Position: {self.planned_home_position}")
         print("\nMission Items:")
-        for item in self.get_mission_items():
-            print(f"- Command: {item['Command']}, Lat: {item['Latitude']}, Lon: {item['Longitude']}, Alt: {item['Altitude']}")
+        for item in self.get_mission_items3D():
+            print(f"- Lat: {item['Latitude']}, Lon: {item['Longitude']}, Alt: {item['Altitude']}")
 
 
-    def plot(self):
+    def plot3D(self):
         # Extract lat/lon and altitude coordinates for each mission point, ignoring None values
-        mission_items = self.get_mission_items()
+        mission_items = self.get_mission_items3D()
         latitudes = [item["Latitude"] for item in mission_items]
         longitudes = [item["Longitude"] for item in mission_items]
         altitudes = [item["Altitude"] for item in mission_items]
@@ -87,14 +102,33 @@ class DroneMissionPlan:
         plt.grid(True)
         plt.show()
 
+    def plot2D(self):
+        # Extract x and y coordinates for each mission point
+        mission_items = self.get_mission_items2D()
+        x_coords = [item["x"] for item in mission_items]
+        y_coords = [item["y"] for item in mission_items]
+
+        #Plot cartesian coordinates
+        plt.figure(figsize=(8, 8))
+        plt.plot(x_coords, y_coords, marker='o', linestyle='-', color='blue')
+        plt.scatter(x_coords, y_coords, color='red', s=100, label="Waypoints")
+        plt.xlabel("X (metri)")
+        plt.ylabel("Y (metri)")
+        plt.title("Waypoints in Coordinate Cartesiane")
+        plt.legend()
+        plt.grid(True)
+        plt.axis("equal")
+        plt.show()
+
 if __name__ == "__main__":
     # Load the mission plan from a JSON file
     json_data = {}
-    with open('case_studies/mission2.plan', 'r') as file:
+    with open('case_studies/mission3.plan', 'r') as file:
         json_data = json.load(file)
 
     mission_plan = DroneMissionPlan(json_data)
     mission_plan.display_mission_summary()
 
     # Display the mission plan
-    mission_plan.plot()
+    mission_plan.plot3D()
+    mission_plan.plot2D()
