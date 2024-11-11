@@ -3,7 +3,12 @@ import matplotlib.pyplot as plt
 import utils
 
 class DroneMissionPlan:
-    def __init__(self, json_data):
+    def __init__(self, json_file):
+        # Load JSON data from file
+        json_data = {}
+        with open(json_file, 'r') as file:
+            json_data = json.load(file)
+
         # Load data from JSON
         self.file_type = json_data.get("fileType", "")
         self.geo_fence = json_data.get("geoFence", {})
@@ -58,11 +63,12 @@ class DroneMissionPlan:
         origin_lon = waypoints[0]["Longitude"]
 
         for waypoint in waypoints:
-            x, y = utils.latlon_to_cartesian(waypoint["Latitude"], waypoint["Longitude"], origin_lat, origin_lon)
+            y, x = utils.latlon_to_cartesian(waypoint["Latitude"], waypoint["Longitude"], origin_lat, origin_lon)
             cartesian_waypoints.append({
                 "x": x,
                 "y": y,
             })
+
         return cartesian_waypoints
 
 
@@ -123,7 +129,7 @@ class DroneMissionPlan:
 if __name__ == "__main__":
     # Load the mission plan from a JSON file
     json_data = {}
-    with open('case_studies/mission3.plan', 'r') as file:
+    with open('case_studies/mission1.plan', 'r') as file:
         json_data = json.load(file)
 
     mission_plan = DroneMissionPlan(json_data)
