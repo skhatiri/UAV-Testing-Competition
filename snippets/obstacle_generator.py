@@ -17,8 +17,8 @@ MAX_LENGTH = 20
 MIN_HEIGHT = 10
 MAX_HEIGHT = 25
 
-NUM_POINTS = 200
-THRESHOLD_DISTANCE = 30
+NUM_POINTS = 500
+THRESHOLD_DISTANCE = 20
 
 class ObstacleGenerator:
    
@@ -152,5 +152,5 @@ class ObstacleGenerator:
 if __name__ == "__main__":
     print("Obstacle Generator")
     generator = ObstacleGenerator()
-    obstacles = generator.generate("case_studies/mission1.plan")
+    obstacles = generator.generate("case_studies/mission3.plan")
     print("Generated Obstacles:", obstacles)

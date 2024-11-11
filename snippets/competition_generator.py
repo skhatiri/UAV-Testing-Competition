@@ -11,10 +11,6 @@ import json
 
 class CompetitionGenerator(object):
 
-    min_size = Obstacle.Size(2, 2, 15)
-    max_size = Obstacle.Size(20, 20, 25)
-    min_position = Obstacle.Position(5, 5, 0, 0)
-    max_position = Obstacle.Position(50, 50, 0, 90)
 
     def __init__(self, case_study_file: str) -> None:        
         self.case_study = DroneTest.from_yaml(case_study_file)
@@ -46,14 +42,14 @@ class CompetitionGenerator(object):
                 size = Obstacle.Size(
                     l=obst['length'], 
                     w=obst['width'], 
-                    h=obst['height'],
+                    h=10,
                 )
                 
                 # Create an obstacle with size and position
                 obstacle = Obstacle(size, position)
                 list_obstacles.append(obstacle)
 
-            test = TestCase(self.case_study, [obstacle])
+            test = TestCase(self.case_study, list_obstacles)
             try:
                 # Execute test case
                 test.execute()
@@ -70,5 +66,5 @@ class CompetitionGenerator(object):
 
 if __name__ == "__main__":
     # Testing
-    generator = CompetitionGenerator("case_studies/mission1.yaml")
+    generator = CompetitionGenerator("case_studies/mission3.yaml")
     generator.generate(3) # Budget
