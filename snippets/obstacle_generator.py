@@ -2,23 +2,14 @@ import random
 from typing import List, Dict
 from math import cos, sin, sqrt
 import matplotlib.pyplot as plt
-import json
+import config
+import os
+import yaml
+from datetime import datetime
 from matplotlib.patches import Rectangle
 from mission_plan import DroneMissionPlan
 from utils import Position,fibonacci_spiral
 
-MIN_POSITION = Position(-40,10)
-MAX_POSITION = Position(30,40)
-
-MIN_LENGTH = 2
-MIN_WIDTH = 2
-MAX_WIDTH = 20
-MAX_LENGTH = 20
-MIN_HEIGHT = 10
-MAX_HEIGHT = 25
-
-NUM_POINTS = 500
-THRESHOLD_DISTANCE = 20
 
 class ObstacleGenerator:
    
@@ -62,7 +53,9 @@ class ObstacleGenerator:
         plt.ylabel("Y Position")
         plt.legend()
         plt.grid(True)
-        plt.savefig('./obstacle_generator.png')
+        os.makedirs(config.DIR_GENERATED_PLOTS, exist_ok=True)
+        current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")        
+        plt.savefig(f"{config.DIR_GENERATED_PLOTS}obst_{current_datetime}.png")
 
     def check_overlap(self, new_obstacle: Dict, obstacles: List[Dict]) -> bool:
         for obs in obstacles:
@@ -86,60 +79,81 @@ class ObstacleGenerator:
         num_obstacles = 2
         obstacles = []
         
-        for obstacle in range(num_obstacles):
-            while True:  # Infinite loop until a valid obstacle is placed
-                center_point = random.choice(filtered_points)
-                filtered_points.remove(center_point)
-                length = random.uniform(MIN_LENGTH, MAX_LENGTH)
-                width = random.uniform(MIN_WIDTH, MAX_WIDTH)
+        for obstacle_index in range(num_obstacles):
+            while True:
+                if obstacle_index == 0:
+                    # First obstacle can be any point from filtered_points
+                    center_point = random.choice(filtered_points)
+                    filtered_points.remove(center_point)
+                else:
+                    # For the second obstacle, find a point close to the first obstacle
+                    first_obstacle = obstacles[0]
+                    # Find points close to the first obstacle (within a reasonable distance, e.g., < THRESHOLD_DISTANCE)
+                    nearby_points = [
+                        point for point in filtered_points 
+                        if self.distance(Position(first_obstacle['x'], first_obstacle['y']), point) <= config.THRESHOLD_DISTANCE
+                    ]
+                    
+                    if not nearby_points:
+                        print("No nearby points found for the second obstacle.")
+                        break
+                    
+                    center_point = random.choice(nearby_points)
+                    filtered_points.remove(center_point)
+
+                length = random.uniform(config.OBST_MIN_LENGTH, config.OBST_MAX_LENGTH)
+                width = random.uniform(config.OBST_MIN_WIDTH, config.OBST_MAX_WIDTH)
                 
-                # Define the new obstacle with center as (x, y)
                 new_obstacle = {
                     "x": center_point.x,
                     "y": center_point.y,
                     "z": 0,
                     "length": length,
                     "width": width,
-                    "height": random.uniform(MIN_HEIGHT, MAX_HEIGHT),
+                    "height": random.uniform(config.OBST_MIN_HEIGHT, config.OBST_MAX_HEIGHT),
                     "rotation": 0  # No rotation for simplicity
                 }
                 
-                # Calculate bounds based on the center
                 x_min = new_obstacle["x"] - (new_obstacle["length"] / 2)
                 x_max = new_obstacle["x"] + (new_obstacle["length"] / 2)
                 y_min = new_obstacle["y"] - (new_obstacle["width"] / 2)
                 y_max = new_obstacle["y"] + (new_obstacle["width"] / 2)
                 
-                # Check if the obstacle is within the allowed boundaries
-                if not (MIN_POSITION.x <= x_min <= MAX_POSITION.x and MIN_POSITION.x <= x_max <= MAX_POSITION.x and
-                        MIN_POSITION.y <= y_min <= MAX_POSITION.y and MIN_POSITION.y <= y_max <= MAX_POSITION.y):
-                    #print("Obstacle out of bounds")
-                    continue  # Skip this obstacle if it is out of bounds
+                if not (config.GENERATION_AREA_MIN_POS.x <= x_min <= config.GENERATION_AREA_MAX_POS.x and config.GENERATION_AREA_MIN_POS.x <= x_max <= config.GENERATION_AREA_MAX_POS.x and
+                        config.GENERATION_AREA_MIN_POS.y <= y_min <= config.GENERATION_AREA_MAX_POS.y and config.GENERATION_AREA_MIN_POS.y <= y_max <= config.GENERATION_AREA_MAX_POS.y):
+                    continue  # Skip if out of bounds
                 
-                # Check if the new obstacle overlaps with any existing obstacles
                 if not self.check_overlap(new_obstacle, obstacles):
                     obstacles.append(new_obstacle)
-                    break  # Break out of the loop if placed successfully
+                    break  # Exit the loop if obstacle placed successfully
         
         return obstacles
 
     def generate(self, case_study_file: str):
        
-        mission_plan = DroneMissionPlan(case_study_file)
+        # Extract plan file details
+        with open(case_study_file, 'r') as file:
+            yaml_content = yaml.safe_load(file)
+        
+        mission_file = yaml_content.get("drone", {}).get("mission_file")
+
+        # Extract mission waypoints
+        mission_plan = DroneMissionPlan(mission_file)
         waypoints2D = mission_plan.get_mission_items2D()
 
+        # Calculate the centroid of the mission waypoints
         avg_x = sum(point['x'] for point in waypoints2D) / len(waypoints2D)
         avg_y = sum(point['y'] for point in waypoints2D) / len(waypoints2D)
         spiral_center = Position(avg_x, avg_y)
 
         # Generate Fibonacci spiral points
-        spiral_points = fibonacci_spiral(NUM_POINTS, spiral_center, MIN_POSITION, MAX_POSITION)
+        spiral_points = fibonacci_spiral(config.NUM_SPIRAL_POINTS, spiral_center, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
 
         # Convert mission waypoints to Position objects
         trajectory = [Position(point['x'], point['y']) for point in waypoints2D]
         
         #Filter spiral points based on distance from trajectory
-        filtered_points = self.filter_spiral(spiral_points, trajectory, THRESHOLD_DISTANCE)
+        filtered_points = self.filter_spiral(spiral_points, trajectory, config.THRESHOLD_DISTANCE)
         
         # Generate obstacles based on filtered points
         obstacles = self.generate_obstacles(filtered_points)
@@ -152,5 +166,5 @@ class ObstacleGenerator:
 if __name__ == "__main__":
     print("Obstacle Generator")
     generator = ObstacleGenerator()
-    obstacles = generator.generate("case_studies/mission3.plan")
+    obstacles = generator.generate("case_studies/mission3.yaml")
     print("Generated Obstacles:", obstacles)

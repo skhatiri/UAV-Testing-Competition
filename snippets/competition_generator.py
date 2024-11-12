@@ -1,7 +1,8 @@
 import random
-import yaml
 from typing import List
 from math import cos, sin, pi
+
+import config
 from aerialist.px4.drone_test import DroneTest
 from aerialist.px4.obstacle import Obstacle
 from testcase import TestCase
@@ -11,22 +12,16 @@ import json
 
 class CompetitionGenerator(object):
 
-
     def __init__(self, case_study_file: str) -> None:        
         self.case_study = DroneTest.from_yaml(case_study_file)
-
-        with open(case_study_file, 'r') as file:
-            yaml_content = yaml.safe_load(file)
-        
-        # Extract plan file details
-        self.mission_file = yaml_content.get("drone", {}).get("mission_file")
+        self.case_study_file = case_study_file
 
     def generate(self, budget: int) -> List[TestCase]: 
         test_cases = []
         for _ in range(budget):
           
             obstacle_generator = ObstacleGenerator()
-            obstacles = obstacle_generator.generate(self.mission_file)
+            obstacles = obstacle_generator.generate(self.case_study_file)
             print(json.dumps(obstacles, indent=4))
 
             list_obstacles = []
@@ -42,7 +37,7 @@ class CompetitionGenerator(object):
                 size = Obstacle.Size(
                     l=obst['length'], 
                     w=obst['width'], 
-                    h=10,
+                    h= config.OBSTACLE_HEIGHT, # Fixed height of the obstacle
                 )
                 
                 # Create an obstacle with size and position
