@@ -1,6 +1,8 @@
 import json
 import matplotlib.pyplot as plt
 import utils
+from scipy.interpolate import interp1d
+import numpy as np
 
 class DroneMissionPlan:
     def __init__(self, json_file):
@@ -71,6 +73,41 @@ class DroneMissionPlan:
 
         return cartesian_waypoints
 
+    def get_drone_speed(self):
+        speed = self.cruise_speed
+        return speed
+       
+    def get_trajectory(self, interval=0.10):
+        mission_items = self.get_mission_items2D()        
+        trajectory_segments = []
+        
+        for i in range(len(mission_items) - 1):
+            start_point = mission_items[i]
+            end_point = mission_items[i + 1]
+            
+            # Calculate Euclidean distance between the two points
+            dist_x = end_point["x"] - start_point["x"]
+            dist_y = end_point["y"] - start_point["y"]
+            distance = np.sqrt(dist_x**2 + dist_y**2)
+            
+            # Calculate the number of intervals needed
+            num_steps = int(distance // interval)
+            
+            # Interpolate points between start_point and end_point
+            x_values = np.linspace(start_point["x"], end_point["x"], num_steps)
+            y_values = np.linspace(start_point["y"], end_point["y"], num_steps)
+            
+            # Initialize a new list for the current segment
+            segment_points = []
+            
+            for x, y in zip(x_values, y_values):
+                segment_points.append(utils.Position(x, y))
+            
+            # Add the current segment to the main list of trajectory segments
+            trajectory_segments.append(segment_points)
+        
+        return trajectory_segments
+
 
     def display_mission_summary(self):
         print("Mission Summary:")
@@ -126,10 +163,11 @@ class DroneMissionPlan:
         plt.axis("equal")
         plt.show()
 
+
 if __name__ == "__main__":
     # Load the mission plan from a JSON file
     json_data = {}
-    with open('case_studies/mission1.plan', 'r') as file:
+    with open('case_studies/mission3.plan', 'r') as file:
         json_data = json.load(file)
 
     mission_plan = DroneMissionPlan(json_data)

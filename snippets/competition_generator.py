@@ -18,12 +18,12 @@ class CompetitionGenerator(object):
 
     def generate(self, budget: int) -> List[TestCase]: 
         test_cases = []
-        for _ in range(budget):
           
-            obstacle_generator = ObstacleGenerator()
-            obstacles = obstacle_generator.generate(self.case_study_file)
-            print(json.dumps(obstacles, indent=4))
+        obstacle_generator = ObstacleGenerator()
+        obstacles = obstacle_generator.generate(self.case_study_file, budget)
+        print(json.dumps(obstacles, indent=4))
 
+        for _ in range(budget):
             list_obstacles = []
             for obst in obstacles:
                 
@@ -31,7 +31,7 @@ class CompetitionGenerator(object):
                     x=obst['x'], 
                     y=obst['y'], 
                     z=0,
-                    r=0,
+                    r=obst['rotation'],
                 )
 
                 size = Obstacle.Size(

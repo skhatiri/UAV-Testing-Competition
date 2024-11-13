@@ -1,6 +1,6 @@
-from math import cos, sin, sqrt, radians
+from math import cos, sin, sqrt, radians, atan2, degrees
 from typing import List, Dict
-import config
+from config import SPIRAL_RADIUS_INCREMENT, SPIRAL_NUM_POINTS, SPIRAL_GOLDEN_ANGLE
 
 class Position:
     """
@@ -59,13 +59,13 @@ def fibonacci_spiral(n: int, center: Position, bottom_left: Position, top_right:
     List[Position]: A list of Position objects that lie within the specified bounds.
     """
     # Golden angle in radians for Fibonacci spiral generation
-    golden_angle = config.SPIRAL_GOLDEN_ANGLE
+    golden_angle = SPIRAL_GOLDEN_ANGLE
     positions = []
     
     # Generate points along the spiral, scaling the radius incrementally
-    for i in range(n * config.SPIRAL_NUM_POINTS):
+    for i in range(n * SPIRAL_NUM_POINTS):
         # Radius grows linearly with the point index
-        radius = config.SPIRAL_RADIUS_INCREMENT * (i + 1) 
+        radius = SPIRAL_RADIUS_INCREMENT * (i + 1) 
         theta = i * golden_angle  # Angle for the current point
 
         # Calculate Cartesian coordinates
@@ -77,3 +77,39 @@ def fibonacci_spiral(n: int, center: Position, bottom_left: Position, top_right:
             positions.append(Position(x, y))  # Create Position instance and add to list
     
     return positions
+
+def calculate_inclination(point1, point2):
+    """
+    Calculates the inclination angle between two points in a 2D plane relative to a vertical line (90 degrees).
+    The result is the angle in degrees, with a positive or negative sign indicating direction relative to 90 degrees.
+    
+    Parameters:
+    point1 (tuple): The first point as a tuple (x1, y1).
+    point2 (tuple): The second point as a tuple (x2, y2).
+    
+    Returns:
+    float: The angle in degrees, measured from 90 degrees, with a positive sign if the line leans to the right
+           and a negative sign if it leans to the left.
+    """
+    
+    
+    # Calculate the difference in x and y coordinates between the two points
+    dx = point2.x - point1.x
+    dy = point2.y - point1.y
+    
+    # Calculate the angle (in radians) and convert to degrees
+    angle_radians = atan2(dy, dx)
+    angle_degrees = degrees(angle_radians)
+    
+    # Calculate deviation from 90 degrees
+    deviation_from_90 =  90 - angle_degrees
+    
+    # Return the deviation with the correct sign (+ for right, - for left)
+    return (deviation_from_90>= 0), angle_degrees
+
+def is_left_of_trajectory(segment: List[Position], point: Position) -> bool:
+        # Implement logic to check if the point is on the left of the trajectory based on the segment
+        x1, y1 = segment[0].x, segment[0].y
+        x2, y2 = segment[-1].x, segment[-1].y
+        px, py = point.x, point.y
+        return (x2 - x1) * (py - y1) - (y2 - y1) * (px - x1) > 0  # True if point is on the left
