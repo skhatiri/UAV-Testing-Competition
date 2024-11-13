@@ -6,7 +6,7 @@ drone:
 simulation:
   simulator: ros #{gazebo, jmavsim, ros} 
   speed: 1
-  headless: false
+  headless: true
   # obstacles:
   # - size:
   #     l: 10
