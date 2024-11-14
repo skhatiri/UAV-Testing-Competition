@@ -19,10 +19,11 @@ class CompetitionGenerator(object):
     def generate(self, budget: int) -> List[TestCase]: 
         test_cases = []
           
-        obstacle_generator = ObstacleGenerator()
-        obstacles, parameters = obstacle_generator.generate(self.case_study_file)
-
         for _ in range(budget):
+
+            obstacle_generator = ObstacleGenerator()
+            obstacles, parameters = obstacle_generator.generate(self.case_study_file)
+
             list_obstacles = []
             for obst in obstacles:
                 
