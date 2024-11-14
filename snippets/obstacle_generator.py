@@ -74,103 +74,128 @@ class ObstacleGenerator:
         plt.savefig(f"{config.DIR_GENERATED_PLOTS}obst_{current_datetime}.png")
 
 
+    def check_validity(self, is_left_first, gate_min_position, gate_max_position, obstacles, min_pos, max_pos):
 
-    def check_overlap(self, new_obstacle: Dict, obstacles: List[Dict]) -> bool:
-        for obs in obstacles:
-            # Calculate AABB corners of the existing and new obstacles
-            x1_min = obs['x'] - obs['length'] / 2
-            x1_max = obs['x'] + obs['length'] / 2
-            y1_min = obs['y'] - obs['width'] / 2
-            y1_max = obs['y'] + obs['width'] / 2
+        valid_obstacles = []
+        
+        for obst in obstacles:
+            min_x, min_y = min_pos
+            max_x, max_y = max_pos
 
-            x2_min = new_obstacle['x'] - new_obstacle['length'] / 2
-            x2_max = new_obstacle['x'] + new_obstacle['length'] / 2
-            y2_min = new_obstacle['y'] - new_obstacle['width'] / 2
-            y2_max = new_obstacle['y'] + new_obstacle['width'] / 2
+            # Extract obstacle properties
+            obst_x, obst_y = obst["x"], obst["y"]
+            obst_length = obst["length"]
+            obst_width = obst["width"]
+            
+            while True:
+                # Define obstacle's bounding box
+                left_x = obst_x - obst_length / 2
+                right_x = obst_x + obst_length / 2
+                bottom_y = obst_y - obst_width / 2
+                top_y = obst_y + obst_width / 2
 
-            # Check for overlap (no gap in both x and y directions)
-            if x1_max > x2_min and x1_min < x2_max and y1_max > y2_min and y1_min < y2_max:
-                return True
-        return False
+                # Check if obstacle fits within the bounds
+                if (left_x >= min_x and right_x <= max_x and bottom_y >= min_y and top_y <= max_y):
+                    valid_obstacles.append(obst)  # Obstacle is valid
+                    break
+                else:
+                    # Reshape obstacle by reducing its dimensions
+                    
 
-    def edge_distance(self, obstacle_edges: Dict, point: Position) -> float:
-        # Calculate the shortest distance from point to the edges of the obstacle
-        x_dist = min(abs(point.x - obstacle_edges["x_min"]), abs(point.x - obstacle_edges["x_max"]))
-        y_dist = min(abs(point.y - obstacle_edges["y_min"]), abs(point.y - obstacle_edges["y_max"]))
-        return (x_dist**2 + y_dist**2) ** 0.5  # Euclidean distance from point to the closest edge
 
-    def generate_obstacles(self, budget: int, segment: List[Position], filtered_points: List[Position], speedDrone: float, drone_dimension: float) -> List[Dict]:
+        return valid_obstacles
+
+
+    def generate_obstacles(self, budget: int, segment: List[Position], filtered_points: List[Position], drone_dimension: float) -> List[Dict]:
 
         num_obstacles = config.NUM_OBSTACLES 
         obstacles = []
 
-        # Calcola l'angolo del segmento per orientare gli ostacoli
-        left_first, angle = calculate_inclination(segment[0], segment[-1])
+        # Calculate inclination of the segment
+        is_left_first, angle = calculate_inclination(segment[0], segment[-1])
 
-        # Divide i punti filtrati in sinistra e destra rispetto alla traiettoria
+        # Divide filtered points into left and right
         left_points = [p for p in filtered_points if is_left_of_trajectory(segment, p)]
         right_points = [p for p in filtered_points if not is_left_of_trajectory(segment, p)]
 
-        # Verifica se ci sono punti sufficienti per posizionare gli ostacoli
         if not left_points or not right_points:
-            return []  # Nessun ostacolo se i punti sono insufficienti
+            return []  # No valid points
 
-        # Determina i punti medi a sinistra e a destra per posizionare gli ostacoli
-        entry_point_left = left_points[len(left_points) // 2]  # Punto mediano della sinistra
-        entry_point_right = right_points[len(right_points) // 2]  # Punto mediano della destra
-
-        # Definisci le dimensioni e inclinazioni degli ostacoli
-        obstacle_length = 10
-        obstacle_width = 5
-        internal_inclination = 25  # Gradi di inclinazione verso l'interno
-
-        candidate_obstacles = {
-            "x": entry_point_left.x,
-            "y": entry_point_left.y,
-            "z": 0,
-            "length": obstacle_length,
-            "width": obstacle_width,
-            "rotation": angle - internal_inclination  # Inclinazione verso l'interno
-        }
-
-        # Verifica se l'ostacolo candidato supera la traiettoria, se supera sposta il centro
-        candidate_obstacles = self.check_obstacle_position(candidate_obstacles, left_first)
-
-        #Posizionamento secondo elemento:
-        #parto dal punto mediano di destra e mi allontano finche non ho la distanza che voglio
-        #posiziono il secondo ostacolo
-
-        return obstacles
-
-    # Helper methods
-
-    def calculate_rotated_edges(self, obstacle: Dict) -> Dict:
-        """Calculate the rotated edge coordinates of the obstacle."""
-        cx, cy = obstacle["x"], obstacle["y"]
-        half_length = obstacle["length"] / 2
-        half_width = obstacle["width"] / 2
-        angle_rad = math.radians(obstacle["rotation"])
+        entry_point = None
         
-        # Calculate corner points after rotation
-        corners = [
-            (cx + half_length * math.cos(angle_rad) - half_width * math.sin(angle_rad),
-            cy + half_length * math.sin(angle_rad) + half_width * math.cos(angle_rad)),
-            (cx - half_length * math.cos(angle_rad) - half_width * math.sin(angle_rad),
-            cy - half_length * math.sin(angle_rad) + half_width * math.cos(angle_rad)),
-            (cx - half_length * math.cos(angle_rad) + half_width * math.sin(angle_rad),
-            cy - half_length * math.sin(angle_rad) - half_width * math.cos(angle_rad)),
-            (cx + half_length * math.cos(angle_rad) + half_width * math.sin(angle_rad),
-            cy + half_length * math.sin(angle_rad) - half_width * math.cos(angle_rad))
-        ]
+        if(is_left_first):
+            entry_point = left_points[len(left_points) // config.OBST_POS_FACTOR] 
+        else:
+            entry_point = right_points[len(right_points) // config.OBST_POS_FACTOR]
         
-        # Determine min and max x and y from rotated corners
-        x_values, y_values = zip(*corners)
-        return {
-            "x_min": min(x_values),
-            "x_max": max(x_values),
-            "y_min": min(y_values),
-            "y_max": max(y_values),
-        }
+        # Calculate the gate position
+        gate_min_position = Position(entry_point.x-((drone_dimension//2)*config.GATE_FACTOR), entry_point.y) 
+        gate_max_position = Position(entry_point.x+((drone_dimension//2)*config.GATE_FACTOR), entry_point.y)
+
+        # Adjust for obstacle center positioning
+        half_length = config.OBST_MAX_LENGTH / 2
+        half_width = config.OBST_MAX_WIDTH / 2
+        
+        if is_left_first:
+            # `gate_min_position` is the top-right corner of the left block
+            left_obstacle_x = gate_min_position.x - half_length
+            left_obstacle_y = gate_min_position.y - half_width
+
+            # `gate_max_position` is the bottom-left corner of the right block
+            right_obstacle_x = gate_max_position.x + half_length
+            right_obstacle_y = gate_max_position.y + half_width
+
+            obstacles = [
+                {
+                    "x": left_obstacle_x,
+                    "y": left_obstacle_y,
+                    "z": 0,
+                    "length": config.OBST_MAX_LENGTH,
+                    "width": config.OBST_MAX_WIDTH,
+                    "rotation": config.OBST_ROTATION
+                },
+                {
+                    "x": right_obstacle_x,
+                    "y": right_obstacle_y,
+                    "z": 0,
+                    "length": config.OBST_MAX_LENGTH,
+                    "width": config.OBST_MAX_WIDTH,
+                    "rotation": config.OBST_ROTATION
+                }
+            ]
+        else:
+            # `gate_min_position` is the bottom-left corner of the left block
+            left_obstacle_x = gate_min_position.x + half_length
+            left_obstacle_y = gate_min_position.y + half_width
+
+            # `gate_max_position` is the top-right corner of the right block
+            right_obstacle_x = gate_max_position.x + half_length
+            right_obstacle_y = gate_max_position.y - half_width
+
+            obstacles = [
+                {
+                    "x": left_obstacle_x,
+                    "y": left_obstacle_y,
+                    "z": 0,
+                    "length": config.OBST_MAX_LENGTH,
+                    "width": config.OBST_MAX_WIDTH,
+                    "rotation": config.OBST_ROTATION
+                },
+                {
+                    "x": right_obstacle_x,
+                    "y": right_obstacle_y,
+                    "z": 0,
+                    "length": config.OBST_MAX_LENGTH,
+                    "width": config.OBST_MAX_WIDTH,
+                    "rotation": config.OBST_ROTATION
+                }
+            ]
+
+        #Check if the obstacles are valid
+        valid_obstacles = self.check_validity(is_left_first, gate_min_position, gate_max_position, obstacles, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
+
+        return valid_obstacles
+
     
     def get_obstacle_segment(self, trajectory, min_pos, max_pos) -> List[Position]:
         max_points_in_area = 0
@@ -190,15 +215,6 @@ class ObstacleGenerator:
 
         return best_segment
 
-
-
-    def is_within_generation_area(self, edges: Dict) -> bool:
-        """Check if the rotated obstacle edges are within the generation area."""
-        return (config.GENERATION_AREA_MIN_POS.x <= edges["x_min"] <= config.GENERATION_AREA_MAX_POS.x and
-                config.GENERATION_AREA_MIN_POS.x <= edges["x_max"] <= config.GENERATION_AREA_MAX_POS.x and
-                config.GENERATION_AREA_MIN_POS.y <= edges["y_min"] <= config.GENERATION_AREA_MAX_POS.y and
-                config.GENERATION_AREA_MIN_POS.y <= edges["y_max"] <= config.GENERATION_AREA_MAX_POS.y)
-
     def generate(self, case_study_file: str, budget:int):
        
         # Extract plan file details
@@ -210,6 +226,7 @@ class ObstacleGenerator:
         # Extract mission waypoints
         mission_plan = DroneMissionPlan(mission_file)
         waypoints2D = mission_plan.get_mission_items2D()
+        print(waypoints2D)
 
         # Calculate the centroid of the mission waypoints
         avg_x = sum(point['x'] for point in waypoints2D) / len(waypoints2D)
@@ -228,10 +245,8 @@ class ObstacleGenerator:
         # Filter spiral points based on distance from obstacles segment
         filtered_points = self.filter_spiral(spiral_points, obst_segment, config.THRESHOLD_DISTANCE)
         
-        drone_speed = mission_plan.get_drone_speed()
-
         # Generate obstacles
-        obstacles = self.generate_obstacles(budget, obst_segment, filtered_points, drone_speed, config.DRONE_DIMENSIONS)
+        obstacles = self.generate_obstacles(budget, obst_segment, filtered_points, config.DRONE_DIMENSIONS)
         
         #Plot everything
         self.plot(spiral_points, filtered_points, obst_segment, spiral_center, obstacles)
@@ -241,5 +256,5 @@ class ObstacleGenerator:
 if __name__ == "__main__":
     print("Obstacle Generator")
     generator = ObstacleGenerator()
-    obstacles = generator.generate("case_studies/mission3.yaml", 10)
+    obstacles = generator.generate("case_studies/mission1.yaml", 10)
     print("Generated Obstacles:", obstacles)
