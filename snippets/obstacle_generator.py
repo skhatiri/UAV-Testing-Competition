@@ -1,4 +1,4 @@
-import random
+import json
 from typing import List, Dict
 from math import cos, sin, sqrt
 import matplotlib.pyplot as plt
@@ -73,13 +73,15 @@ class ObstacleGenerator:
         current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         plt.savefig(f"{config.DIR_GENERATED_PLOTS}obst_{current_datetime}.png")
 
-    def generate_obstacles(self, budget: int, segment: List[Position], filtered_points: List[Position], drone_dimension: float) -> List[Dict]:
+    def generate_obstacles(self, segment: List[Position], filtered_points: List[Position], drone_dimension: float) -> List[Dict]:
 
         num_obstacles = config.NUM_OBSTACLES 
         obstacles = []
 
         # Calculate inclination of the segment
         is_left_first, angle = calculate_inclination(segment[0], segment[-1])
+
+        print("Inclination: ", angle)
 
         # Divide filtered points into left and right
         left_points = [p for p in filtered_points if is_left_of_trajectory(segment, p)]
@@ -90,25 +92,28 @@ class ObstacleGenerator:
 
         entry_point = None
         
+        # Select the entry point based on the inclination
         if(is_left_first):
             entry_point = left_points[len(left_points) // config.OBST_POS_FACTOR] 
         else:
             entry_point = right_points[len(right_points) // config.OBST_POS_FACTOR]
         
         ##
-        ## GATE
+        ## GATE COORDINATES
         ##
         
-        gate_min_position = Position(entry_point.x-((drone_dimension/2)*config.GATE_FACTOR), entry_point.y) 
-        gate_max_position = Position(entry_point.x+((drone_dimension/2)*config.GATE_FACTOR), entry_point.y)
+        gate_min_position = Position(entry_point.x-((drone_dimension/2)*config.DRONE_FACTOR), entry_point.y) 
+        gate_max_position = Position(entry_point.x+((drone_dimension/2)*config.DRONE_FACTOR), entry_point.y)
 
         print("Gate Min Position:", gate_min_position.x, gate_min_position.y)
         print("Gate Max Position:", gate_max_position.x, gate_max_position.y)
 
         max_legth_left = 0
         max_width_left = 0
+
         max_legth_right = 0
         max_width_right = 0
+        
         ##
         ## POSITIONING
         ##
@@ -124,8 +129,14 @@ class ObstacleGenerator:
             if(max_legth_left > (config.OBST_MAX_LENGTH / 2)):
                 max_legth_left = config.OBST_MAX_LENGTH / 2
 
+            if(max_legth_left < (config.OBST_MIN_LENGTH / 2)):
+                max_legth_left = config.OBST_MIN_LENGTH / 2
+
             if(max_width_left > (config.OBST_MAX_WIDTH / 2)):
                 max_width_left = config.OBST_MAX_WIDTH / 2
+
+            if(max_width_left < (config.OBST_MIN_WIDTH / 2)):
+                max_width_left = config.OBST_MIN_WIDTH / 2
             
             ##
             ## RIGHT OBSTACLE
@@ -178,8 +189,14 @@ class ObstacleGenerator:
             if(max_legth_left > (config.OBST_MAX_LENGTH / 2)):
                 max_legth_left = config.OBST_MAX_LENGTH / 2
 
+            if(max_legth_left < (config.OBST_MIN_LENGTH / 2)):
+                max_legth_left = config.OBST_MIN_LENGTH / 2
+
             if(max_width_left > (config.OBST_MAX_WIDTH / 2)):
                 max_width_left = config.OBST_MAX_WIDTH / 2
+
+            if(max_width_left < (config.OBST_MIN_WIDTH / 2)):
+                max_width_left = config.OBST_MIN_WIDTH / 2
             
             ##
             ## RIGHT OBSTACLE
@@ -221,9 +238,8 @@ class ObstacleGenerator:
                 }
             ]
 
-        return obstacles
+        return obstacles, [gate_min_position, gate_max_position]
 
-    
     def get_obstacle_segment(self, trajectory, min_pos, max_pos) -> List[Position]:
         max_points_in_area = 0
         best_segment = None
@@ -234,7 +250,7 @@ class ObstacleGenerator:
                 point for point in segment 
                 if (min_pos.x <= point.x <= max_pos.x) and (min_pos.y <= point.y <= max_pos.y)
             ]
-            print(len(in_area_points))
+            
             # Update if the current segment has the most points within the area
             if len(in_area_points) > max_points_in_area:
                 max_points_in_area = len(in_area_points)
@@ -242,7 +258,7 @@ class ObstacleGenerator:
 
         return best_segment
 
-    def generate(self, case_study_file: str, budget:int):
+    def generate(self, case_study_file: str):
        
         # Extract plan file details
         with open(case_study_file, 'r') as file:
@@ -253,7 +269,6 @@ class ObstacleGenerator:
         # Extract mission waypoints
         mission_plan = DroneMissionPlan(mission_file)
         waypoints2D = mission_plan.get_mission_items2D()
-        print(waypoints2D)
 
         # Calculate the centroid of the mission waypoints
         avg_x = sum(point['x'] for point in waypoints2D) / len(waypoints2D)
@@ -273,15 +288,28 @@ class ObstacleGenerator:
         filtered_points = self.filter_spiral(spiral_points, obst_segment, config.THRESHOLD_DISTANCE)
         
         # Generate obstacles
-        obstacles = self.generate_obstacles(budget, obst_segment, filtered_points, config.DRONE_DIMENSIONS)
+        obstacles, gate = self.generate_obstacles(obst_segment, filtered_points, config.DRONE_DIMENSIONS)
         
+        parameters = {
+            "obstacles": obstacles,
+            "gate_pos1": gate[0],
+            "gate_pos2": gate[1],
+            "center_factor": config.OBST_POS_FACTOR,
+            "obst_segment": obst_segment,
+            "waypoints": waypoints2D,
+            "drone_dimension": config.DRONE_DIMENSIONS,
+            "drone_factor": config.DRONE_FACTOR,
+            "mission": mission_file,
+        }
+
         #Plot everything
         self.plot(spiral_points, filtered_points, obst_segment, spiral_center, obstacles)
         
-        return obstacles
+        print("Generated Obstacles:", json.dumps(obstacles, indent=4))
+
+        return obstacles, parameters
 
 if __name__ == "__main__":
-    print("Obstacle Generator")
+    print("--- Obstacle Generator ---")
     generator = ObstacleGenerator()
-    obstacles = generator.generate("case_studies/mission1.yaml", 10)
-    print("Generated Obstacles:", obstacles)
+    obstacles = generator.generate("case_studies/mission5.yaml")

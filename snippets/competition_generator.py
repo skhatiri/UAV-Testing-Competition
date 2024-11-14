@@ -20,8 +20,7 @@ class CompetitionGenerator(object):
         test_cases = []
           
         obstacle_generator = ObstacleGenerator()
-        obstacles = obstacle_generator.generate(self.case_study_file, budget)
-        print(json.dumps(obstacles, indent=4))
+        obstacles, parameters = obstacle_generator.generate(self.case_study_file)
 
         for _ in range(budget):
             list_obstacles = []
@@ -52,7 +51,11 @@ class CompetitionGenerator(object):
                 print(f"minimum_distance: {min(distances)}")
                 test.plot()
                 test_cases.append(test)
-                 
+                
+                # add minimum distance to parameters json
+                parameters["minimum_distance"] = min(distances)
+                print(parameters)
+
             except Exception as e:
                 print("Exception during test execution, skipping the test")
                 print(e)
