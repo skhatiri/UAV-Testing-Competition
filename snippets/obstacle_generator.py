@@ -73,39 +73,6 @@ class ObstacleGenerator:
         current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         plt.savefig(f"{config.DIR_GENERATED_PLOTS}obst_{current_datetime}.png")
 
-
-    def check_validity(self, is_left_first, gate_min_position, gate_max_position, obstacles, min_pos, max_pos):
-
-        valid_obstacles = []
-        
-        for obst in obstacles:
-            min_x, min_y = min_pos
-            max_x, max_y = max_pos
-
-            # Extract obstacle properties
-            obst_x, obst_y = obst["x"], obst["y"]
-            obst_length = obst["length"]
-            obst_width = obst["width"]
-            
-            while True:
-                # Define obstacle's bounding box
-                left_x = obst_x - obst_length / 2
-                right_x = obst_x + obst_length / 2
-                bottom_y = obst_y - obst_width / 2
-                top_y = obst_y + obst_width / 2
-
-                # Check if obstacle fits within the bounds
-                if (left_x >= min_x and right_x <= max_x and bottom_y >= min_y and top_y <= max_y):
-                    valid_obstacles.append(obst)  # Obstacle is valid
-                    break
-                else:
-                    # Reshape obstacle by reducing its dimensions
-                    
-
-
-        return valid_obstacles
-
-
     def generate_obstacles(self, budget: int, segment: List[Position], filtered_points: List[Position], drone_dimension: float) -> List[Dict]:
 
         num_obstacles = config.NUM_OBSTACLES 
@@ -128,73 +95,133 @@ class ObstacleGenerator:
         else:
             entry_point = right_points[len(right_points) // config.OBST_POS_FACTOR]
         
-        # Calculate the gate position
-        gate_min_position = Position(entry_point.x-((drone_dimension//2)*config.GATE_FACTOR), entry_point.y) 
-        gate_max_position = Position(entry_point.x+((drone_dimension//2)*config.GATE_FACTOR), entry_point.y)
-
-        # Adjust for obstacle center positioning
-        half_length = config.OBST_MAX_LENGTH / 2
-        half_width = config.OBST_MAX_WIDTH / 2
+        ##
+        ## GATE
+        ##
         
+        gate_min_position = Position(entry_point.x-((drone_dimension/2)*config.GATE_FACTOR), entry_point.y) 
+        gate_max_position = Position(entry_point.x+((drone_dimension/2)*config.GATE_FACTOR), entry_point.y)
+
+        print("Gate Min Position:", gate_min_position.x, gate_min_position.y)
+        print("Gate Max Position:", gate_max_position.x, gate_max_position.y)
+
+        max_legth_left = 0
+        max_width_left = 0
+        max_legth_right = 0
+        max_width_right = 0
+        ##
+        ## POSITIONING
+        ##
         if is_left_first:
+            
+            ##
+            ## LEFT OBSTACLE
+            ##
+            
+            max_legth_left = self.distance(Position(config.GENERATION_AREA_MIN_POS.x, gate_min_position.y), gate_min_position)/2
+            max_width_left = self.distance(Position(gate_min_position.x, config.GENERATION_AREA_MIN_POS.y), gate_min_position)/2
+
+            if(max_legth_left > (config.OBST_MAX_LENGTH / 2)):
+                max_legth_left = config.OBST_MAX_LENGTH / 2
+
+            if(max_width_left > (config.OBST_MAX_WIDTH / 2)):
+                max_width_left = config.OBST_MAX_WIDTH / 2
+            
+            ##
+            ## RIGHT OBSTACLE
+            ##
+
+            max_legth_right = self.distance(Position(config.GENERATION_AREA_MAX_POS.x, gate_max_position.y), gate_max_position)/2
+            max_width_right = self.distance(Position(gate_max_position.x, config.GENERATION_AREA_MAX_POS.y), gate_max_position)/2
+
+            if(max_legth_right > (config.OBST_MAX_LENGTH / 2)):
+                max_legth_right = config.OBST_MAX_LENGTH / 2
+
+            if(max_width_right > (config.OBST_MAX_WIDTH / 2)):
+                max_width_right = config.OBST_MAX_WIDTH / 2
+
             # `gate_min_position` is the top-right corner of the left block
-            left_obstacle_x = gate_min_position.x - half_length
-            left_obstacle_y = gate_min_position.y - half_width
+            left_obstacle_x = gate_min_position.x - max_legth_left
+            left_obstacle_y = gate_min_position.y - max_width_left
 
             # `gate_max_position` is the bottom-left corner of the right block
-            right_obstacle_x = gate_max_position.x + half_length
-            right_obstacle_y = gate_max_position.y + half_width
+            right_obstacle_x = gate_max_position.x + max_legth_right
+            right_obstacle_y = gate_max_position.y + max_width_right
 
             obstacles = [
                 {
                     "x": left_obstacle_x,
                     "y": left_obstacle_y,
                     "z": 0,
-                    "length": config.OBST_MAX_LENGTH,
-                    "width": config.OBST_MAX_WIDTH,
+                    "length": max_legth_left*2,
+                    "width": max_width_left*2,
                     "rotation": config.OBST_ROTATION
                 },
                 {
                     "x": right_obstacle_x,
                     "y": right_obstacle_y,
                     "z": 0,
-                    "length": config.OBST_MAX_LENGTH,
-                    "width": config.OBST_MAX_WIDTH,
+                    "length": max_legth_right*2,
+                    "width": max_width_right*2,
                     "rotation": config.OBST_ROTATION
                 }
             ]
         else:
+
+            ##
+            ## LEFT OBSTACLE
+            ##
+            
+            max_legth_left = self.distance(Position(config.GENERATION_AREA_MIN_POS.x, gate_min_position.y), gate_min_position)/2
+            max_width_left = self.distance(Position(gate_min_position.x, config.GENERATION_AREA_MAX_POS.y), gate_min_position)/2
+
+            if(max_legth_left > (config.OBST_MAX_LENGTH / 2)):
+                max_legth_left = config.OBST_MAX_LENGTH / 2
+
+            if(max_width_left > (config.OBST_MAX_WIDTH / 2)):
+                max_width_left = config.OBST_MAX_WIDTH / 2
+            
+            ##
+            ## RIGHT OBSTACLE
+            ##
+
+            max_legth_right = self.distance(Position(config.GENERATION_AREA_MAX_POS.x, gate_max_position.y), gate_max_position)/2
+            max_width_right = self.distance(Position(gate_max_position.x, config.GENERATION_AREA_MIN_POS.y), gate_max_position)/2
+
+            if(max_legth_right > (config.OBST_MAX_LENGTH / 2)):
+                max_legth_right = config.OBST_MAX_LENGTH / 2
+
+            if(max_width_right > (config.OBST_MAX_WIDTH / 2)):
+                max_width_right = config.OBST_MAX_WIDTH / 2
+
             # `gate_min_position` is the bottom-left corner of the left block
-            left_obstacle_x = gate_min_position.x + half_length
-            left_obstacle_y = gate_min_position.y + half_width
+            left_obstacle_x = gate_min_position.x - max_legth_left
+            left_obstacle_y = gate_min_position.y + max_width_left
 
             # `gate_max_position` is the top-right corner of the right block
-            right_obstacle_x = gate_max_position.x + half_length
-            right_obstacle_y = gate_max_position.y - half_width
+            right_obstacle_x = gate_max_position.x + max_legth_right
+            right_obstacle_y = gate_max_position.y - max_width_right
 
             obstacles = [
                 {
                     "x": left_obstacle_x,
                     "y": left_obstacle_y,
                     "z": 0,
-                    "length": config.OBST_MAX_LENGTH,
-                    "width": config.OBST_MAX_WIDTH,
+                    "length": max_legth_left*2,
+                    "width": max_width_left*2,
                     "rotation": config.OBST_ROTATION
                 },
                 {
                     "x": right_obstacle_x,
                     "y": right_obstacle_y,
                     "z": 0,
-                    "length": config.OBST_MAX_LENGTH,
-                    "width": config.OBST_MAX_WIDTH,
+                    "length": max_legth_right*2,
+                    "width": max_width_left*2,
                     "rotation": config.OBST_ROTATION
                 }
             ]
 
-        #Check if the obstacles are valid
-        valid_obstacles = self.check_validity(is_left_first, gate_min_position, gate_max_position, obstacles, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
-
-        return valid_obstacles
+        return obstacles
 
     
     def get_obstacle_segment(self, trajectory, min_pos, max_pos) -> List[Position]:
