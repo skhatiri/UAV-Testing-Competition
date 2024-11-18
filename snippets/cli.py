@@ -59,7 +59,7 @@ if __name__ == "__main__":
     config_loggers()
     try:
         args = arg_parse()
-        #generator = RandomGenerator(case_study_file=args.test)
+        
         generator = CompetitionGenerator(case_study_file=args.test)
         test_cases = generator.generate(args.budget)
 

@@ -1,22 +1,6 @@
-from math import cos, sin, sqrt, radians, atan2, degrees
+from math import *
 from typing import List, Dict
-from config import SPIRAL_RADIUS_INCREMENT, SPIRAL_NUM_POINTS, SPIRAL_GOLDEN_ANGLE
 
-class Position:
-    """
-    Represents a 3D position in Cartesian coordinates with an optional angle attribute.
-    
-    Attributes:
-    x (float): X-coordinate in meters.
-    y (float): Y-coordinate in meters.
-    z (float): Z-coordinate in meters (default is 0).
-    angle (int): Angle in degrees (default is 0).
-    """
-    def __init__(self, x: float, y: float, z: float = 0, angle: int = 0) -> None:
-        self.x = x
-        self.y = y
-        self.z = z
-        self.angle = angle
 
 def latlon_to_cartesian(lat: float, lon: float, origin_lat: float, origin_lon: float) -> tuple:
     """
@@ -45,71 +29,63 @@ def latlon_to_cartesian(lat: float, lon: float, origin_lat: float, origin_lon: f
 
     return x, y
 
-def fibonacci_spiral(n: int, center: Position, bottom_left: Position, top_right: Position) -> List[Position]:
-    """
-    Generates positions in a Fibonacci spiral pattern within specified bounds.
-    
-    Args:
-    n (int): Number of main spiral points (each will generate multiple sub-points).
-    center (Position): The center of the spiral.
-    bottom_left (Position): Bottom-left boundary of the area.
-    top_right (Position): Top-right boundary of the area.
-    
-    Returns:
-    List[Position]: A list of Position objects that lie within the specified bounds.
-    """
-    # Golden angle in radians for Fibonacci spiral generation
-    golden_angle = SPIRAL_GOLDEN_ANGLE
-    positions = []
-    
-    # Generate points along the spiral, scaling the radius incrementally
-    for i in range(n * SPIRAL_NUM_POINTS):
-        # Radius grows linearly with the point index
-        radius = SPIRAL_RADIUS_INCREMENT * (i + 1) 
-        theta = i * golden_angle  # Angle for the current point
+def segment_length(x1, y1, x2, y2):
+    """Calcola la lunghezza del segmento."""
+    return sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
-        # Calculate Cartesian coordinates
-        x = center.x + radius * cos(theta)
-        y = center.y + radius * sin(theta)
-        
-        # Add point if within specified rectangular boundary
-        if bottom_left.x <= x <= top_right.x and bottom_left.y <= y <= top_right.y:
-            positions.append(Position(x, y))  # Create Position instance and add to list
-    
-    return positions
-
-def calculate_inclination(point1, point2):
+def clip_segment_to_rectangle(rect, segment):
     """
-    Calculates the inclination angle between two points in a 2D plane relative to a vertical line (90 degrees).
-    The result is the angle in degrees, with a positive or negative sign indicating direction relative to 90 degrees.
-    
-    Parameters:
-    point1 (tuple): The first point as a tuple (x1, y1).
-    point2 (tuple): The second point as a tuple (x2, y2).
-    
-    Returns:
-    float: The angle in degrees, measured from 90 degrees, with a positive sign if the line leans to the right
-           and a negative sign if it leans to the left.
+    Taglia un segmento ai bordi del rettangolo (se interseca).
+    rect: (x_min, y_min, x_max, y_max)
+    segment: ((x1, y1), (x2, y2))
+    Ritorna il segmento tagliato o None se non interseca.
     """
-    
-    
-    # Calculate the difference in x and y coordinates between the two points
-    dx = point2.x - point1.x
-    dy = point2.y - point1.y
-    
-    # Calculate the angle (in radians) and convert to degrees
-    angle_radians = atan2(dy, dx)
-    angle_degrees = degrees(angle_radians)
-    
-    # Calculate deviation from 90 degrees
-    deviation_from_90 =  90 - angle_degrees
-    
-    # Return the deviation with the correct sign (+ for right, - for left)
-    return (deviation_from_90>= 0), angle_degrees
+    from shapely.geometry import LineString, box
 
-def is_left_of_trajectory(segment: List[Position], point: Position) -> bool:
-        # Implement logic to check if the point is on the left of the trajectory based on the segment
-        x1, y1 = segment[0].x, segment[0].y
-        x2, y2 = segment[-1].x, segment[-1].y
-        px, py = point.x, point.y
-        return (x2 - x1) * (py - y1) - (y2 - y1) * (px - x1) > 0  # True if point is on the left
+    rect_box = box(rect[0][0], rect[0][1], rect[1][0], rect[1][1])
+    seg_line = LineString([segment[0], segment[1]])
+    intersection = rect_box.intersection(seg_line)
+
+    if intersection.is_empty:
+        return None
+    elif intersection.geom_type == 'LineString':
+        x1, y1 = intersection.coords[0]
+        x2, y2 = intersection.coords[1]
+        return (x1, y1), (x2, y2)
+    return None
+
+def get_obstacle_segment(rect, segments):
+    """
+    Trova il segmento più lungo (dopo l'intersezione con il rettangolo).
+    rect: (x_min, y_min, x_max, y_max)
+    segments: [((x1, y1), (x2, y2)), ...]
+    Ritorna il segmento più lungo e la sua lunghezza.
+    """
+    max_length = 0
+    longest_segment = None
+
+    for segment in segments:
+        clipped = clip_segment_to_rectangle(rect, segment)
+        if clipped:
+            length = segment_length(clipped[0][0], clipped[0][1], clipped[1][0], clipped[1][1])
+            if length > max_length:
+                max_length = length
+                longest_segment = clipped
+
+    return longest_segment
+
+def distance_point_segment(point, segment):
+    x1, y1 = point
+    x2, y2 = segment[0]
+    x3, y3 = segment[1]
+    
+    # Calcolo dei coefficienti della retta ax + by + c = 0
+    a = y3 - y2
+    b = x2 - x3
+    c = x3 * y2 - x2 * y3
+    
+    # Calcolo della distanza usando la formula
+    n = abs(a * x1 + b * y1 + c)
+    d = sqrt(a**2 + b**2)
+    
+    return n / d

@@ -66,10 +66,7 @@ class DroneMissionPlan:
 
         for waypoint in waypoints:
             y, x = utils.latlon_to_cartesian(waypoint["Latitude"], waypoint["Longitude"], origin_lat, origin_lon)
-            cartesian_waypoints.append({
-                "x": x,
-                "y": y,
-            })
+            cartesian_waypoints.append((x, y))
 
         return cartesian_waypoints
 
@@ -77,34 +74,14 @@ class DroneMissionPlan:
         speed = self.cruise_speed
         return speed
        
-    def get_trajectory(self, interval=0.10):
-        mission_items = self.get_mission_items2D()        
+    def get_trajectory_segments(self):
+        mission_items = self.get_mission_items2D()
         trajectory_segments = []
         
         for i in range(len(mission_items) - 1):
             start_point = mission_items[i]
             end_point = mission_items[i + 1]
-            
-            # Calculate Euclidean distance between the two points
-            dist_x = end_point["x"] - start_point["x"]
-            dist_y = end_point["y"] - start_point["y"]
-            distance = np.sqrt(dist_x**2 + dist_y**2)
-            
-            # Calculate the number of intervals needed
-            num_steps = int(distance // interval)
-            
-            # Interpolate points between start_point and end_point
-            x_values = np.linspace(start_point["x"], end_point["x"], num_steps)
-            y_values = np.linspace(start_point["y"], end_point["y"], num_steps)
-            
-            # Initialize a new list for the current segment
-            segment_points = []
-            
-            for x, y in zip(x_values, y_values):
-                segment_points.append(utils.Position(x, y))
-            
-            # Add the current segment to the main list of trajectory segments
-            trajectory_segments.append(segment_points)
+            trajectory_segments.append((start_point, end_point))
         
         return trajectory_segments
 
