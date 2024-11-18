@@ -104,7 +104,9 @@ class ObstacleGenerator:
         }
 
         return parameters
-          
+    
+    def getCandidatePoints(self):
+        return self.filtered_spiral
 
 if __name__ == "__main__":
     print("--- Obstacle Generator ---")
