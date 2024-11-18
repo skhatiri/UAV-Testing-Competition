@@ -34,7 +34,11 @@ class CompetitionGenerator(object):
         obstacle_generator = ObstacleGenerator(mission_plan)
            
         for _ in range(budget):
+            
+            # Get candidate points
+            candidate_points = obstacle_generator.getCandidatePoints()
 
+            #TODO: Implement evolution algorithm
             obstacles, parameters = obstacle_generator.generate()
 
             list_obstacles = []

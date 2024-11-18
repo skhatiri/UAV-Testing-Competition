@@ -107,6 +107,29 @@ class ObstacleGenerator:
     
     def getCandidatePoints(self):
         return self.filtered_spiral
+    
+    def generate(self, parameters):
+        parameters = parameters
+
+        obstacles = [{
+            "x": parameters[0],
+            "y": parameters[1],
+            "z": config.OBST_Z,
+            "rotation": parameters[2],
+            "length": config.OBST_LENGTH,
+            "width": config.OBST_WIDTH,
+            "height": config.OBSTACLE_HEIGHT,
+        },
+        {
+            "x": parameters[3],
+            "y": parameters[4],
+            "z": config.OBST_Z,
+            "rotation": parameters[5],
+            "length": config.OBST_LENGTH,
+            "width": config.OBST_WIDTH,
+            "height": config.OBSTACLE_HEIGHT,
+        }]
+
 
 if __name__ == "__main__":
     print("--- Obstacle Generator ---")
