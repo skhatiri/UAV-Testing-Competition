@@ -29,12 +29,16 @@ The UAV Testing Competition organized jointly by the [International Conference o
 - [Contacts](#contacts)
   
 ## Announcements
+### Deadline Extension
+
+- The deadline is extended to 24 November 2025 for [ICST](https://conf.researchr.org/home/icst-2025) participants.
+- The deadline is extended to 2 December 2025 for [SBFT@ICSE](https://sbft25.github.io/) participants.
 
 ### 2<sup>nd</sup> Edition at ICST/SBFT 2025
 
 *The UAV Testing competition is back on!*
 
-This year, we are extending the competition to [ICST](https://conf.researchr.org/home/icst-2025), while still organizing it at [SBFT](https://sbft24.github.io/).
+This year, we are extending the competition to [ICST](https://conf.researchr.org/home/icst-2025), while still organizing it at [SBFT](https://sbft25.github.io/).
 
 The competition call, deadlines, guidelines, and evaluation, will be identical for the two calls.
 You will have the option to choose where you want to participate and compete against the other competitors who applied for the same venue.
