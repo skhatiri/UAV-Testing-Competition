@@ -37,13 +37,26 @@ class FibonacciSpiral:
 
         return positions
     
-    def filter_spiral(self, segment, threshold_distance):
+    def filter_spiral(self, segment, threshold_distance, bottom_left:tuple, top_right:tuple):
         
         filtered_points = []
 
         #Filter points based on distance from segment
         for point in self.points:
             if distance_point_segment(point, segment) < threshold_distance:
-                filtered_points.append(point)
+                
+                # Round the point to the nearest config.round_parameter
+                new_point = (
+                    round(point[0] / config.ROUND_PARAMETER) * config.ROUND_PARAMETER,
+                    round(point[1] / config.ROUND_PARAMETER) * config.ROUND_PARAMETER,
+                )
+
+            # Add point if within specified boundary
+            if self.bottom_left[0] <= new_point[0] <= self.top_right[0] and self.bottom_left[1] <= new_point[1] <= self.top_right[1]:
+                filtered_points.append(new_point)
+
+        
+        # Remove duplicates
+        unique_points = list(set(filtered_points))
     
-        return filtered_points
+        return unique_points

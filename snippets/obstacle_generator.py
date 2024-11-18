@@ -4,6 +4,7 @@ from math import cos, sin, sqrt
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 import config
+import numpy as np
 import os, math
 import yaml
 from datetime import datetime
@@ -37,7 +38,7 @@ class ObstacleGenerator:
         print(len(self.fibonacci_spiral.points), "Fibonacci Spiral Points")
        
         # Filter spiral points based on distance from obstacles segment
-        self.filtered_spiral = self.fibonacci_spiral.filter_spiral(self.obst_segment, config.THRESHOLD_DISTANCE)
+        self.filtered_spiral = self.fibonacci_spiral.filter_spiral(self.obst_segment, config.THRESHOLD_DISTANCE, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
         print(len(self.filtered_spiral), "Filtered Spiral Points")
 
         self.plot()
@@ -101,6 +102,7 @@ class ObstacleGenerator:
             "segment": self.obst_segment,
             "fibonacci_param": [self.segment_center, config.NUM_SPIRAL_POINTS, config.SPIRAL_GOLDEN_ANGLE, config.SPIRAL_RADIUS_INCREMENT],
             "thresold_distance": config.THRESHOLD_DISTANCE,
+
         }
 
         return parameters
@@ -129,6 +131,59 @@ class ObstacleGenerator:
             "width": config.OBST_WIDTH,
             "height": config.OBSTACLE_HEIGHT,
         }]
+
+    def mutate(self, parameters, history_mutant):
+        is_unique = False
+
+        while not is_unique:
+            # Copy parameters
+            mutated_parameters = parameters[:]
+
+            #Choose a random parameter to mutate
+            choice = np.random.uniform(0, 6)
+
+            if choice < 1:  # Mutation on x1
+                new_x1 = mutated_parameters[0]
+                while new_x1 == mutated_parameters[0]:
+                    new_x1 = mutated_parameters[0] + np.random.choice([-1, 1])
+                mutated_parameters[0] = new_x1
+
+            elif choice < 2:  # Mutation on x1
+                new_y1 = mutated_parameters[1]
+                while new_y1 == mutated_parameters[1]:
+                    new_y1 = mutated_parameters[1] + np.random.choice([-1, 1])
+                mutated_parameters[1] = new_y1
+
+            elif choice < 3:  # Mutation on x1
+                new_r1 = mutated_parameters[2]
+                while new_r1 == mutated_parameters[2]:
+                    new_r1 = np.random.choice(np.arange(0, 91, 10))
+                mutated_parameters[2] = new_r1
+
+            elif choice < 4:  # Mutation on x1
+                new_x2 = mutated_parameters[3]
+                while new_x2 == mutated_parameters[3]:
+                    new_x2 = mutated_parameters[3] + np.random.choice([-1, 1])
+                mutated_parameters[3] = new_x2
+
+            elif choice < 5:  # Mutation on x1
+                new_y2 = mutated_parameters[4]
+                while new_y2 == mutated_parameters[4]:
+                    new_y2 = mutated_parameters[4] + np.random.choice([-1, 1])
+                mutated_parameters[4] = new_y2
+
+            else:  # Mutation on x1
+                new_r2 = mutated_parameters[5]
+                while new_r2 == mutated_parameters[5]:
+                    new_r2 = np.random.choice(np.arange(0, 91, 10))
+                mutated_parameters[5] = new_r2
+
+            # Check if mutated parameters are unique
+            if mutated_parameters not in history_mutant:
+                is_unique = True
+
+        return mutated_parameters
+
 
 
 if __name__ == "__main__":
