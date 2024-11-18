@@ -83,15 +83,7 @@ class ObstacleGenerator:
         file_path = f"{config.DIR_GENERATED_PLOTS}/obst_{current_datetime}.png"
         plt.savefig(file_path)
         print(f"Plot saved to {file_path}")
-
-    def check_overlap(self, obstacles):
-        overlap = False
-        return overlap
     
-    def check_area(self, obstacles):
-        inside = False
-        return inside
-
     def create_obstacles(self):
         return None
     
@@ -184,7 +176,43 @@ class ObstacleGenerator:
 
         return mutated_parameters
 
+    def check_inside_area(self, obstacle, generation_area_min_pos, generation_area_max_pos):
+        
+        center_x = obstacle["x"]
+        center_y = obstacle["y"]
+        length = obstacle["length"]
+        width = obstacle["width"]
+        rotation = obstacle["rotation"]
 
+        rad = math.radians(rotation)
+
+        half_length = length / 2
+        half_width = width / 2
+
+        corners = [
+            (half_length, half_width),
+            (-half_length, half_width),
+            (-half_length, -half_width),
+            (half_length, -half_width)
+        ]
+
+        rotated_corners = []
+        for corner in corners:
+            x_rot = center_x + corner[0] * math.cos(rad) - corner[1] * math.sin(rad)
+            y_rot = center_y + corner[0] * math.sin(rad) + corner[1] * math.cos(rad)
+            rotated_corners.append((x_rot, y_rot))
+
+        for vertex in rotated_corners:
+            if not (generation_area_min_pos[0] <= vertex[0] <= generation_area_max_pos[0] and
+                    generation_area_min_pos[1] <= vertex[1] <= generation_area_max_pos[1]):
+                return False
+
+        return True
+
+    def check_overlap(self, obstacles):
+            overlap = False
+            
+            return overlap
 
 if __name__ == "__main__":
     print("--- Obstacle Generator ---")
