@@ -7,7 +7,7 @@ import shutil
 import sys
 from decouple import config
 from random_generator import RandomGenerator
-from competition_generator import CompetitionGenerator
+from evolution_strategy import EvolutionaryStrategy
 
 TESTS_FOLDER = config("TESTS_FOLDER", default="./generated_tests/")
 logger = logging.getLogger(__name__)
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     try:
         args = arg_parse()
         
-        generator = CompetitionGenerator(case_study_file=args.test)
+        generator = EvolutionaryStrategy(case_study_file=args.test)
         test_cases = generator.generate(args.budget)
 
     except Exception as e:

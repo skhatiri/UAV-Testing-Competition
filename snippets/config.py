@@ -21,6 +21,7 @@ OBST_Z = 0
 
 # Execution
 MINIMUM_DISTANCE_EXECUTION = 50 # meters
+LOCAL_MINIMUM = 100
 DIR_GENERATED_PLOTS = "generated_tests_plot/"
 
 # Obstacle Position Factor

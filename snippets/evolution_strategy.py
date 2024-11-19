@@ -22,7 +22,7 @@ def timeout_handler(signum, frame):
         raise Exception("Timeout")
 
 
-class CompetitionGenerator(object):
+class EvolutionaryStrategy(object):
 
     def __init__(self, case_study_file: str) -> None:        
         self.case_study = DroneTest.from_yaml(case_study_file)
@@ -73,7 +73,7 @@ class CompetitionGenerator(object):
         history_mutant = []
         for i in range(budget):
 
-            if(minimum_local < 50):
+            if(minimum_local < config.LOCAL_MINIMUM): # Avoid local minimum
                 child_config = self.obstacle_generator.mutate(parent_config, history_mutant)
                 history_mutant.append(child_config)
                 child_fitness = self.execution(child_config)
