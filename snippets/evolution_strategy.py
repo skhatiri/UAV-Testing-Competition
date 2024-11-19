@@ -7,24 +7,30 @@ import config
 from aerialist.px4.drone_test import DroneTest
 from aerialist.px4.obstacle import Obstacle
 from testcase import TestCase
-import DroneMissionPlan
+from mission_plan import DroneMissionPlan
 import signal
-import datetime
+from datetime import datetime
 import os
 import shutil
-
+from json import *
 from obstacle_generator import ObstacleGenerator
 import json
 
-TESTS_FOLDER = config("TESTS_FOLDER", default="./generated_tests/")
-
+class DataEncoder(JSONEncoder):
+    def default(self, o):
+        return o.__dict__
+    
 def timeout_handler(signum, frame):
         raise Exception("Timeout")
 
-
 class EvolutionaryStrategy(object):
 
-    def __init__(self, case_study_file: str) -> None:        
+    def __init__(self, case_study_file: str) -> None:
+        
+        print("------------------------------------")
+        print("Evolutionary Strategy Setup")
+        print("------------------------------------")
+
         self.case_study = DroneTest.from_yaml(case_study_file)
         
         # Reading mission plan content
@@ -36,47 +42,63 @@ class EvolutionaryStrategy(object):
         self.mission_plan = DroneMissionPlan(mission_file)
 
         # Create obstacle Generator based on mission plan
-        self.obstacle_generator = ObstacleGenerator(self.mission_plan)
-
-        # Parameters for the evolution algorithm
-        self.dimensions = 6
-        self.sigma = 0.1
-        self.num_generation = 50
+        self.obstacle_generator = ObstacleGenerator(self.mission_plan, case_study_file)
 
         # Create a folder to store the tests
-        self.tests_fld = f'{TESTS_FOLDER}{datetime.now().strftime("%d-%m-%H-%M-%S")}/'
-        os.mkdir(self.tests_fld)
+        self.tests_fld = f'{config.DIR_GENERATED_TESTS}{datetime.now().strftime("%d-%m-%H-%M-%S")}/'
+        os.makedirs(self.tests_fld, exist_ok=True)
         print(f"Output folder: {self.tests_fld}")
 
+        #Counter for the tests
+        self.test_counter = 0
+        self.budget = 0
 
-    def simulate_execute():
-        return random.uniform(0.10, 50)
+    def simulate_execute(self):
+        distance = round(random.uniform(0.10, 40), 3)        
+        print(f"Simulating execution (random)")
+        return distance        
     
-    def generate(self, budget: int) -> List[TestCase]: 
-        
-        test_cases = []
+    def initialize_parent(self):
         candidate_points = self.obstacle_generator.getCandidatePoints()
+        cand_len = len(candidate_points)
+        
+        # Choose random points from the candidate points
+        i = random.randint(0, cand_len-1)
 
         parent_parameters = [
-            candidate_points[0][0], 
-            candidate_points[0][1],  
-            np.random.choice(np.arange(0, 91, 10)), # Random rotation between 0 and 90 degrees (10 degree steps)
-            candidate_points[1][0],  
-            candidate_points[1][1],  
-            np.random.choice(np.arange(0, 91, 10)) # Random rotation between 0 and 90 degrees (10 degree steps)
+            candidate_points[i][0], 
+            candidate_points[i][1],  
+            np.random.choice(np.arange(0, 91, config.ANGLE_STEP)), # Random rotation between 0 and 90 degrees (N degree steps)
+            candidate_points[i][0],  
+            candidate_points[i][1],  
+            np.random.choice(np.arange(0, 91, config.ANGLE_STEP)) # Random rotation between 0 and 90 degrees (N degree steps)
         ]
-    
-        parent_config = self.obstacle_generator.generate(parent_parameters)
-        parent_fitness = self.execution(parent_config)
+
+        return parent_parameters
+
+    def generate(self, budget: int) -> List[TestCase]: 
+        print("------------------------------------")
+        print("Generation")
+        print("------------------------------------")
+
+        self.budget = budget
+        parent_config = self.initialize_parent()
+        parent_config = self.obstacle_generator.generate(parent_config)
+        print(f"Parent config: {parent_config}")
+        parent_obsts = self.obstacle_generator.get_obstacles_from_parameters(parent_config)
+        parent_fitness = self.execution(parent_obsts)
+        print(f"Parent fitness: {parent_fitness}")
         
         minimum_local = 0
         history_mutant = []
-        for i in range(budget):
+        
+        for i in range(self.budget):
 
             if(minimum_local < config.LOCAL_MINIMUM): # Avoid local minimum
                 child_config = self.obstacle_generator.mutate(parent_config, history_mutant)
                 history_mutant.append(child_config)
-                child_fitness = self.execution(child_config)
+                child_obsts = self.obstacle_generator.get_obstacles_from_parameters(child_config)
+                child_fitness = self.execution(child_obsts)
 
                 # Selection
                 if child_fitness <= parent_fitness:
@@ -88,17 +110,22 @@ class EvolutionaryStrategy(object):
                     minimum_local += 1
 
                 # Output 
-                print(f"Generation {i+1}: Miglior fitness = {parent_fitness:.4f}")
+                print(f"Generation {self.test_counter}: Best fitness = {parent_fitness:.4f}")
             else:
-                parent_parameters = []
+                parent_parameters = self.initialize_parent()
                 parent_config = self.obstacle_generator.generate(parent_parameters)
                 minimum_local = 0
                 history_mutant = []
 
-    def execution(self, config):
-        test_cases = []
+    def execution(self, obstacles):
+        
+        print("------------------------------------")
+        print(f"Execution {self.test_counter}/{self.budget}")
+        print("------------------------------------")
+
         list_obstacles = []
-        for obst in config:
+
+        for obst in obstacles:
             
             position = Obstacle.Position(
                 x=obst['x'], 
@@ -110,7 +137,7 @@ class EvolutionaryStrategy(object):
             size = Obstacle.Size(
                 l=obst['length'], 
                 w=obst['width'], 
-                h=obst['heigth'],
+                h=obst['height'],
             )
             
             # Create an obstacle with size and position
@@ -119,37 +146,48 @@ class EvolutionaryStrategy(object):
 
         test = TestCase(self.case_study, list_obstacles)
         try:
-            signal.signal(signal.SIGALRM, timeout_handler)
-            timeout_duration = 60 * 10
-            signal.alarm(timeout_duration)
+            
+            if(config.TESTING == True):
+                distances = [self.simulate_execute()]
+            else:
+                signal.signal(signal.SIGALRM, timeout_handler)
+                timeout_duration = 60 * 10
+                signal.alarm(timeout_duration)
 
-            test.execute()
+                test.execute()
+                test.plot()
+                distances = test.get_distances()
 
-            distances = test.get_distances()
+
             print(f"Minimum distance:{min(distances)}")
-            test.plot()
         except Exception as e:
             print("Exception during test execution, skipping the test")
             print(e)
         
         # Save the results
         if(min(distances) < config.MINIMUM_DISTANCE_EXECUTION):
-            date_time = datetime.now().strftime("%d-%m-%H-%M-%S")
-            test.save_yaml(f"{self.tests_fld}/test_{datetime}.yaml")
-            shutil.copy2(test.log_file, f"{self.tests_fld}/test_{datetime}.ulg")
-            shutil.copy2(test.plot_file, f"{self.tests_fld}/test_{datetime}.png")
+
+
+            if(config.TESTING == False):
+                test.save_yaml(f"{self.tests_fld}test_{self.test_counter}.yaml")
+                shutil.copy2(test.log_file, f"{self.tests_fld}test_{self.test_counter}.ulg")
+                shutil.copy2(test.plot_file, f"{self.tests_fld}test_{self.test_counter}.png")
 
             # Add minimum distance and obstacles to json
             parameters = self.obstacle_generator.getParameters()
-            parameters["obstacles"] = config
-            parameters["minimum_distance"] = min(distances)
-
-            shutil.copy2(parameters, f"{self.tests_fld}/parameters{datetime}.json")
-            print(f"Results saved to {self.tests_fld}")
-
-        return min(distances)
+            parameters["obstacles"] = f"{obstacles}"
+            parameters["minimum_distance"] = f"{min(distances)}"
+            
+            # Save the parameters to json
+            parameters_file = f"{self.tests_fld}parameters_{self.test_counter}.json"
+            with open(parameters_file, "w") as json_file:
+                json.dump(parameters, json_file, indent=4, ensure_ascii=False)
+            
+            print(f"Test saved to {parameters_file}")
+            self.test_counter += 1
+            return min(distances)
 
 if __name__ == "__main__":
     # Testing
-    generator = CompetitionGenerator("case_studies/mission3.yaml")
-    generator.generate(3) # Budget
+    generator = EvolutionaryStrategy("case_studies/mission3.yaml")
+    generator.generate(200) # Budget

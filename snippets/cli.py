@@ -9,9 +9,7 @@ from decouple import config
 from random_generator import RandomGenerator
 from evolution_strategy import EvolutionaryStrategy
 
-TESTS_FOLDER = config("TESTS_FOLDER", default="./generated_tests/")
 logger = logging.getLogger(__name__)
-
 
 def arg_parse():
     main_parser = ArgumentParser(

@@ -12,12 +12,14 @@ from matplotlib.patches import Rectangle
 from mission_plan import DroneMissionPlan
 from fibonacci_spiral import FibonacciSpiral
 from aerialist.px4.drone_test import DroneTest
+from shapely.geometry import Polygon
 import utils
 
 class ObstacleGenerator:
 
-    def __init__(self, mission_plan: DroneMissionPlan):        
+    def __init__(self, mission_plan: DroneMissionPlan, case_study_file: str):     
         self.mission_plan = mission_plan
+        self.case_study_file = case_study_file
 
         # Trajectory segment between each pair of waypoints
         self.trajectory = self.mission_plan.get_trajectory_segments()
@@ -28,13 +30,12 @@ class ObstacleGenerator:
         print("Best Segment:", self.obst_segment)
 
         # Center of the obstacle segment
-        self.segment_center=None
-        if self.obst_segment:
-            start, end = self.obst_segment
-            segment_center = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
+        self.segment_center=(None, None)
+        start, end = self.obst_segment
+        self.segment_center = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
 
         # Generate Fibonacci spiral
-        self.fibonacci_spiral = FibonacciSpiral(segment_center, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
+        self.fibonacci_spiral = FibonacciSpiral(self.segment_center, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
         print(len(self.fibonacci_spiral.points), "Fibonacci Spiral Points")
        
         # Filter spiral points based on distance from obstacles segment
@@ -90,11 +91,10 @@ class ObstacleGenerator:
     def getParameters(self):
 
         parameters = {
-            "mission": self.mission_plan.file_type,
-            "segment": self.obst_segment,
-            "fibonacci_param": [self.segment_center, config.NUM_SPIRAL_POINTS, config.SPIRAL_GOLDEN_ANGLE, config.SPIRAL_RADIUS_INCREMENT],
-            "thresold_distance": config.THRESHOLD_DISTANCE,
-
+            "mission": f"{self.case_study_file}",
+            "segment": f"{self.obst_segment}",
+            "fibonacci_param": f"{[self.segment_center, config.NUM_SPIRAL_POINTS, config.SPIRAL_GOLDEN_ANGLE, config.SPIRAL_RADIUS_INCREMENT]}",
+            "thresold_distance": f"{config.THRESHOLD_DISTANCE}",
         }
 
         return parameters
@@ -102,50 +102,55 @@ class ObstacleGenerator:
     def getCandidatePoints(self):
         return self.filtered_spiral
     
+    def get_obstacles_from_parameters(self, parameters):
+        obstacles = [{
+            "x": parameters[0],
+            "y": parameters[1],
+            "z": config.OBST_Z,
+            "rotation": parameters[2],
+            "length": config.OBST_LENGTH,
+            "width": config.OBST_WIDTH,
+            "height": config.OBSTACLE_HEIGHT,
+        },
+        {
+            "x": parameters[3],
+            "y": parameters[4],
+            "z": config.OBST_Z,
+            "rotation": parameters[5],
+            "length": config.OBST_LENGTH,
+            "width": config.OBST_WIDTH,
+            "height": config.OBSTACLE_HEIGHT,
+        }]
+
+        return obstacles
+
     def generate(self, parameters):
         parameters = parameters
         history_mutant = []
+        history_mutant.append(parameters)
 
         is_overlapped = False
         is_inside_area = False
-        is_unique = False
+        is_unique = True
 
-        while sum(is_unique, is_overlapped, is_inside_area) < 2:
-            obstacles = [{
-                "x": parameters[0],
-                "y": parameters[1],
-                "z": config.OBST_Z,
-                "rotation": parameters[2],
-                "length": config.OBST_LENGTH,
-                "width": config.OBST_WIDTH,
-                "height": config.OBSTACLE_HEIGHT,
-            },
-            {
-                "x": parameters[3],
-                "y": parameters[4],
-                "z": config.OBST_Z,
-                "rotation": parameters[5],
-                "length": config.OBST_LENGTH,
-                "width": config.OBST_WIDTH,
-                "height": config.OBSTACLE_HEIGHT,
-            }]
+        while sum([is_unique, is_overlapped, is_inside_area]) < 3:
 
+            obstacles = self.get_obstacles_from_parameters(parameters)
             is_overlapped = self.check_overlap(obstacles)
             is_inside_area = self.check_inside_area(obstacles, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
 
-            if(sum(is_overlapped, is_inside_area) < 2):
+            if(sum([is_overlapped, is_inside_area]) < 2):
                 parameters = self.mutate(parameters, history_mutant)
-                history_mutant.append(parameters)
+
                 is_unique = False
                 is_overlapped = False
                 is_inside_area = False
-
-            # Check if mutated parameters are unique
+           
             if parameters not in history_mutant:
                 is_unique = True
-                history_mutant = []
+                history_mutant.append(parameters)
 
-        return obstacles
+        return parameters
 
     def mutate(self, parameters, history_mutant):
         is_unique = False
@@ -154,71 +159,54 @@ class ObstacleGenerator:
 
         mutated_parameters = parameters.copy()
 
-        while sum(is_unique, is_overlapped, is_inside_area) < 3:
+        while sum([is_unique, is_overlapped, is_inside_area]) < 3:
             is_unique = False
             is_overlapped = False
             is_inside_area = False
 
-            for param in mutated_parameters:
-                #Choose a random parameter to mutate
-                choice = np.random.uniform(0, 6)
+            #Choose a random parameter to mutate
+            choice = np.random.uniform(0, 6)
 
-                if choice < 1:  # Mutation on x1
-                    new_x1 = param[0]
-                    while new_x1 == param[0]:
-                        new_x1 = param[0] + np.random.choice([-1, 1])
-                    param[0] = new_x1
+            if choice < 1:  # Mutation on x1
+                new_x1 = mutated_parameters[0] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
+                mutated_parameters[0] = new_x1
 
-                elif choice < 2:  # Mutation on x1
-                    new_y1 = param[1]
-                    while new_y1 == param[1]:
-                        new_y1 = mutated_parameters[1] + np.random.choice([-1, 1])
-                    param[1] = new_y1
+            elif choice < 2:  # Mutation on x1               
+                new_y1 = mutated_parameters[1] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
+                mutated_parameters[1] = new_y1
 
-                elif choice < 3:  # Mutation on x1
-                    new_r1 = param[2]
-                    while new_r1 == param[2]:
-                        new_r1 = np.random.choice(np.arange(0, 91, 10))
-                    param[2] = new_r1
+            elif choice < 3:  # Mutation on x1
+                new_r1 = np.random.choice(np.arange(0, 91, config.ANGLE_STEP))
+                mutated_parameters[2] = new_r1
 
-                elif choice < 4:  # Mutation on x1
-                    new_x2 = param[3]
-                    while new_x2 == param[3]:
-                        new_x2 = param[3] + np.random.choice([-1, 1])
-                    param[3] = new_x2
+            elif choice < 4:  # Mutation on x1
+                new_x2 = mutated_parameters[3] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
+                mutated_parameters[3] = new_x2
 
-                elif choice < 5:  # Mutation on x1
-                    new_y2 = param[4]
-                    while new_y2 == param[4]:
-                        new_y2 = param[4] + np.random.choice([-1, 1])
-                    param[4] = new_y2
+            elif choice < 5:  # Mutation on x1
+                new_y2 = mutated_parameters[4] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
+                mutated_parameters[4] = new_y2
 
-                else:  # Mutation on x1
-                    new_r2 = param[5]
-                    while new_r2 == param[5]:
-                        new_r2 = np.random.choice(np.arange(0, 91, 10))
-                    param[5] = new_r2
+            else:  # Mutation on x1
+                new_r2 = np.random.choice(np.arange(0, 91, config.ANGLE_STEP))
+                mutated_parameters[5] = new_r2
 
             # Check if mutated parameters are unique
             if mutated_parameters not in history_mutant:
                 is_unique = True
-                
-            is_overlapped = self.check_overlap(mutated_parameters)
-            is_inside_area = self.check_inside_area(mutated_parameters, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
-
+            
+            obstacles = self.get_obstacles_from_parameters(mutated_parameters)
+            is_overlapped = self.check_overlap(obstacles)
+            is_inside_area = self.check_inside_area(obstacles, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
 
         return mutated_parameters
 
-    def check_inside_area(self, obstacle, generation_area_min_pos, generation_area_max_pos):
+    def check_inside_area(self, obstacles, generation_area_min_pos, generation_area_max_pos):
         
-        center_x = obstacle["x"]
-        center_y = obstacle["y"]
-        length = obstacle["length"]
-        width = obstacle["width"]
-        rotation = obstacle["rotation"]
+        all_inside = True
 
-        rad = math.radians(rotation)
-
+        length = config.OBST_LENGTH
+        width = config.OBST_WIDTH
         half_length = length / 2
         half_width = width / 2
 
@@ -229,24 +217,69 @@ class ObstacleGenerator:
             (half_length, -half_width)
         ]
 
-        rotated_corners = []
-        for corner in corners:
-            x_rot = center_x + corner[0] * math.cos(rad) - corner[1] * math.sin(rad)
-            y_rot = center_y + corner[0] * math.sin(rad) + corner[1] * math.cos(rad)
-            rotated_corners.append((x_rot, y_rot))
+        # Iterate over each obstacle
+        for obst in obstacles:
+            is_inside = True
 
-        for vertex in rotated_corners:
-            if not (generation_area_min_pos[0] <= vertex[0] <= generation_area_max_pos[0] and
-                    generation_area_min_pos[1] <= vertex[1] <= generation_area_max_pos[1]):
-                return False
+            center_x = obst["x"]
+            center_y = obst["y"]
+            rotation = obst["rotation"]
+
+            rad = math.radians(rotation)
+
+            rotated_corners = []
+            for corner in corners:
+                x_rot = center_x + corner[0] * math.cos(rad) - corner[1] * math.sin(rad)
+                y_rot = center_y + corner[0] * math.sin(rad) + corner[1] * math.cos(rad)
+                rotated_corners.append((x_rot, y_rot))
+
+            for vertex in rotated_corners:
+                if not (generation_area_min_pos[0] <= vertex[0] <= generation_area_max_pos[0] and
+                        generation_area_min_pos[1] <= vertex[1] <= generation_area_max_pos[1]):
+                    is_inside = is_inside and False
+        
+            all_inside = all_inside and is_inside
     
-        return True
+        return all_inside 
 
     def check_overlap(self, obstacles):
-            overlap = False
-            #TODO:
-            return overlap
+        def get_polygon(obstacle):
+            cx, cy = obstacle["x"], obstacle["y"]
+            l, w = obstacle["length"] / 2, obstacle["width"] / 2
+            angle = obstacle["rotation"]
 
+            # Calcola i vertici non ruotati (rettangolo centrato su cx, cy)
+            corners = [
+                (cx - l, cy - w),  # Bottom-left
+                (cx + l, cy - w),  # Bottom-right
+                (cx + l, cy + w),  # Top-right
+                (cx - l, cy + w),  # Top-left
+            ]
+
+            # Ruota i vertici attorno al centro
+            rad = math.radians(angle)
+            rotated_corners = [
+                (
+                    math.cos(rad) * (x - cx) - math.sin(rad) * (y - cy) + cx,
+                    math.sin(rad) * (x - cx) + math.cos(rad) * (y - cy) + cy
+                )
+                for x, y in corners
+            ]
+
+            # Crea un poligono Shapely dai vertici
+            return Polygon(rotated_corners)
+
+        # Create polygons from obstacles
+        poly1 = get_polygon(obstacles[0])
+        poly2 = get_polygon(obstacles[1])
+        
+        # Check if polygons intersect
+        if poly1.intersects(poly2):
+            return False # Overlapping
+        else:
+            return True # Not Overlapping
+        
+        
 if __name__ == "__main__":
     print("--- Obstacle Generator ---")
 
