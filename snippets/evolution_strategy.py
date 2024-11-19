@@ -111,6 +111,9 @@ class EvolutionaryStrategy(object):
                 else:
                     self.history_mutant.add(tuple(parent_config)) # Add to history
 
+        print("------------------------------------")
+        print(f"Budget ended - Best fitness = {parent_fitness:.4f}")
+
     def execution(self, obstacles):
         
         print("------------------------------------")
@@ -250,6 +253,8 @@ class EvolutionaryStrategy(object):
             candidate_points[i][1],  
             np.random.choice(np.arange(0, 91, config.ANGLE_STEP)) # Random rotation between 0 and 90 degrees (N degree steps)
         ]
+
+        self.obstacle_generator.filtered_spiral.remove(candidate_points[i])
 
         return parent_parameters
 
