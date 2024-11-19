@@ -14,6 +14,8 @@ from fibonacci_spiral import FibonacciSpiral
 from aerialist.px4.drone_test import DroneTest
 from shapely.geometry import Polygon
 import utils
+import random
+
 
 class ObstacleGenerator:
 
@@ -126,81 +128,15 @@ class ObstacleGenerator:
 
     def generate(self, parameters):
         parameters = parameters
-        history_mutant = []
-        history_mutant.append(parameters)
+       
+        obstacles = self.get_obstacles_from_parameters(parameters)
+        is_valid = self.is_valid(obstacles)
 
-        is_overlapped = False
-        is_inside_area = False
-        is_unique = True
-
-        while sum([is_unique, is_overlapped, is_inside_area]) < 3:
-
-            obstacles = self.get_obstacles_from_parameters(parameters)
-            is_overlapped = self.check_overlap(obstacles)
-            is_inside_area = self.check_inside_area(obstacles, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
-
-            if(sum([is_overlapped, is_inside_area]) < 2):
-                parameters = self.mutate(parameters, history_mutant)
-
-                is_unique = False
-                is_overlapped = False
-                is_inside_area = False
-           
-            if parameters not in history_mutant:
-                is_unique = True
-                history_mutant.append(parameters)
-
+        if(not is_valid):
+            parameters = self.mutate(parameters, config.MAX_ATTEMPTS)
+    
         return parameters
-
-    def mutate(self, parameters, history_mutant):
-        is_unique = False
-        is_overlapped = False
-        is_inside_area = False
-
-        mutated_parameters = parameters.copy()
-
-        while sum([is_unique, is_overlapped, is_inside_area]) < 3:
-            is_unique = False
-            is_overlapped = False
-            is_inside_area = False
-
-            #Choose a random parameter to mutate
-            choice = np.random.uniform(0, 6)
-
-            if choice < 1:  # Mutation on x1
-                new_x1 = mutated_parameters[0] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
-                mutated_parameters[0] = new_x1
-
-            elif choice < 2:  # Mutation on x1               
-                new_y1 = mutated_parameters[1] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
-                mutated_parameters[1] = new_y1
-
-            elif choice < 3:  # Mutation on x1
-                new_r1 = np.random.choice(np.arange(0, 91, config.ANGLE_STEP))
-                mutated_parameters[2] = new_r1
-
-            elif choice < 4:  # Mutation on x1
-                new_x2 = mutated_parameters[3] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
-                mutated_parameters[3] = new_x2
-
-            elif choice < 5:  # Mutation on x1
-                new_y2 = mutated_parameters[4] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
-                mutated_parameters[4] = new_y2
-
-            else:  # Mutation on x1
-                new_r2 = np.random.choice(np.arange(0, 91, config.ANGLE_STEP))
-                mutated_parameters[5] = new_r2
-
-            # Check if mutated parameters are unique
-            if mutated_parameters not in history_mutant:
-                is_unique = True
-            
-            obstacles = self.get_obstacles_from_parameters(mutated_parameters)
-            is_overlapped = self.check_overlap(obstacles)
-            is_inside_area = self.check_inside_area(obstacles, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
-
-        return mutated_parameters
-
+    
     def check_inside_area(self, obstacles, generation_area_min_pos, generation_area_max_pos):
         
         all_inside = True
@@ -278,6 +214,9 @@ class ObstacleGenerator:
             return False # Overlapping
         else:
             return True # Not Overlapping
+        
+    def is_valid(self, obstacles):
+        return self.check_overlap(obstacles) and self.check_inside_area(obstacles, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
         
         
 if __name__ == "__main__":
