@@ -150,7 +150,7 @@ class EvolutionaryStrategy(object):
                 signal.signal(signal.SIGALRM, timeout_handler)
                 timeout_duration = 60 * 10
                 signal.alarm(timeout_duration)
-
+                print("Running ros. . .")
                 test.execute()
                 test.plot()
                 distances = test.get_distances()
@@ -160,6 +160,7 @@ class EvolutionaryStrategy(object):
         except Exception as e:
             print("Exception during test execution, skipping the test")
             print(e)
+            return 100
         
         # Save the results
         if(min(distances) < config.MINIMUM_DISTANCE_EXECUTION):
