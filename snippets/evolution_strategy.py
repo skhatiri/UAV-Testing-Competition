@@ -179,17 +179,17 @@ class EvolutionaryStrategy(object):
             parameters = self.obstacle_generator.getParameters()
             parameters["obstacles"] = f"{obstacles}"
             parameters["minimum_distance"] = f"{min(distances)}"
-            
             # Save the parameters to json
             parameters_file = f"{self.tests_fld}parameters_{self.test_counter}.json"
             with open(parameters_file, "w") as json_file:
                 json.dump(parameters, json_file, indent=4, ensure_ascii=False)
             
             print(f"Test saved to {parameters_file}")
-           
+            self.test_counter += 1
             return min(distances)
+        else:
+            self.test_counter += 1
         
-        self.test_counter += 1
 
     def mutate(self, parameters, max_attempts):
 
