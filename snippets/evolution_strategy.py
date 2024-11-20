@@ -314,6 +314,12 @@ class EvolutionaryStrategy(object):
         print(f"Initialization Parent: {parent_parameters}")
         return parent_parameters
 
+    def mutate_child(self, parameters, max_attempts):
+        return None
+    
+    def mutate_parent(self, parameters, max_attempts):
+        return None
+    
     def restart(self):
         """
         Restarts the evolutionary strategy by initializing a new parent configuration.
