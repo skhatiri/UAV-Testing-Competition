@@ -351,7 +351,7 @@ class EvolutionaryStrategy(object):
             # Choose a random parameter to mutate
             choice = np.random.uniform(0.0, 1.0)
             # print(f"{choice}")
-            if choice < 0.4:  # Move block 1
+            if choice < 0.3:  # Move block 1
                 new_x1 = mutated_parameters[0] + np.random.choice(X_RANGE)
                 new_y1 = mutated_parameters[1] + np.random.choice(Y_RANGE)
                 mutated_parameters[0] = new_x1
@@ -361,7 +361,7 @@ class EvolutionaryStrategy(object):
                 new_r1 = np.random.choice(np.arange(0, 91, config.ANGLE_STEP))
                 mutated_parameters[2] = new_r1
 
-            elif choice < 0.6:  # Move block 2
+            elif choice < 0.8:  # Move block 2
                 new_x2 = mutated_parameters[3] + np.random.choice(X_RANGE)
                 new_y2 = mutated_parameters[4] + np.random.choice(Y_RANGE)
                 mutated_parameters[3] = new_x2
