@@ -58,6 +58,7 @@ class EvolutionaryStrategy(object):
         self.candidate_points = self.obstacle_generator.filtered_spiral.copy()
         self.candidate_pairs_used = set()
         self.threshold = config.THRESHOLD_DISTANCE
+        self.total_score = 0
         
     def generate(self, budget): 
         """
@@ -192,6 +193,8 @@ class EvolutionaryStrategy(object):
         
         # Save the results
         if(min(distances) < config.MINIMUM_DISTANCE_EXECUTION):
+
+            self.total_score += self.calculate_score(min(distances))
 
             if(config.TESTING == False):
                 test.save_yaml(f"{self.tests_fld}test_{self.test_counter}.yaml")
@@ -411,8 +414,64 @@ class EvolutionaryStrategy(object):
         return parent_config
     
     def save_results(self):
-        return None
         
+        # Data to save in JSON
+        data = {
+            "Global Variables": {
+                "NUM_SPIRAL_POINTS": config.NUM_SPIRAL_POINTS,
+                "SPIRAL_GOLDEN_ANGLE": config.SPIRAL_GOLDEN_ANGLE,
+                "SPIRAL_RADIUS_INCREMENT": config.SPIRAL_RADIUS_INCREMENT,
+                "GENERATION_AREA_MIN_POS": [config.GENERATION_AREA_MIN_POS[0], config.GENERATION_AREA_MIN_POS[1]],
+                "GENERATION_AREA_MAX_POS": [config.GENERATION_AREA_MAX_POS[0], config.GENERATION_AREA_MAX_POS[1]],
+                "THRESHOLD_DISTANCE": config.THRESHOLD_DISTANCE,
+                "ROUND_PARAMETER": config.ROUND_PARAMETER,
+                "OBST_LENGTH": config.OBST_LENGTH,
+                "OBST_WIDTH": config.OBST_WIDTH,
+                "OBSTACLE_HEIGHT": config.OBSTACLE_HEIGHT,
+                "OBST_Z": config.OBST_Z,
+                "ANGLE_STEP": config.ANGLE_STEP,
+                "MAX_ATTEMPTS_GENERATION": config.MAX_ATTEMPTS_GENERATION,
+                "MAX_ATTEMPTS_PERFORMANCE": config.MAX_ATTEMPTS_PERFORMANCE,
+                "MINIMUM_DISTANCE_EXECUTION": config.MINIMUM_DISTANCE_EXECUTION,
+                "LOCAL_MINIMUM": config.LOCAL_MINIMUM,
+                "DIR_GENERATED_PLOTS": config.DIR_GENERATED_PLOTS,
+                "DIR_GENERATED_TESTS": config.DIR_GENERATED_TESTS,
+                "TESTING": config.TESTING,
+                "NUM_OBSTS": config.NUM_OBSTS
+                },
+                "Score": {
+                    "SCORE": self.total_score,
+                }
+            }
+        
+        try:
+            with open(f"{self.tests_fld}setup.json", 'w') as json_file:
+                json.dump(data, json_file, indent=4)
+            print(f"Result file saved successfully.")
+            
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            
+    def calculate_score(self, min_dist):
+        """
+        Calculates the score based on the minimum distance.
+
+        Args:
+            min_dist (float): The minimum distance in meters.
+
+        Returns:
+            int: The calculated score.
+        """
+        
+        # Calculate score based on the minimum distance
+        if min_dist < 0.25:
+            return 5
+        elif 0.25 <= min_dist < 1.0:
+            return 2
+        elif 1.0 <= min_dist < 1.5:
+            return 1
+        else:
+            return 0
     
 def timeout_handler(signum, frame):
     """
@@ -431,3 +490,4 @@ if __name__ == "__main__":
     # Testing
     generator = EvolutionaryStrategy("case_studies/mission3.yaml")
     generator.generate(200) # Budget
+    generator.save_results()

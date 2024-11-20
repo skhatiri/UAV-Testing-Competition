@@ -29,6 +29,3 @@ DIR_GENERATED_PLOTS = "./generated_tests_plot/"
 DIR_GENERATED_TESTS = "./generated_tests/"
 TESTING = True
 NUM_OBSTS = 2
-
-# Obstacle Position Factor
-OBST_POS_FACTOR = 2

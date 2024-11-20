@@ -1,12 +1,8 @@
 #!/usr/bin/python3
 from argparse import ArgumentParser
-from datetime import datetime
 import logging
 import os
-import shutil
 import sys
-from decouple import config
-from random_generator import RandomGenerator
 from evolution_strategy import EvolutionaryStrategy
 
 logger = logging.getLogger(__name__)
@@ -60,6 +56,7 @@ if __name__ == "__main__":
         
         generator = EvolutionaryStrategy(case_study_file=args.test)
         test_cases = generator.generate(args.budget)
+        generator.save_results()
 
     except Exception as e:
         logger.exception("program terminated:" + str(e), exc_info=True)
