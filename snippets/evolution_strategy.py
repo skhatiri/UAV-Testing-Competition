@@ -161,6 +161,7 @@ class EvolutionaryStrategy(object):
 
         # Execute the test case
         test = TestCase(self.case_study, list_obstacles)
+        distances = []
         try:
             
             if(config.TESTING == True):
