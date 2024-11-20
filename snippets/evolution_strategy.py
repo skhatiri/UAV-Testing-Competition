@@ -52,6 +52,10 @@ class EvolutionaryStrategy(object):
         self.test_counter = 1
         self.budget = 0
         self.history_mutant = set()
+        self.candidate_points = self.obstacle_generator.filtered_spiral.copy()
+        self.threshold = config.THRESHOLD_DISTANCE
+        self.candidate_points_used = set()
+        
 
     def generate(self, budget: int) -> List[TestCase]: 
         print("------------------------------------")
@@ -69,6 +73,8 @@ class EvolutionaryStrategy(object):
         # Mutate parent until it is valid
         if(not is_valid):
             parent_config = self.mutate(parent_config, config.MAX_ATTEMPTS_GENERATION)
+            if(parent_config==None):
+                raise ValueError("No valid configuration found")
             parent_obsts = self.obstacle_generator.get_obstacles_from_parameters(parent_config)
         else:
             self.history_mutant.add(tuple(parent_config)) # Add to history
@@ -226,9 +232,9 @@ class EvolutionaryStrategy(object):
                 return mutated_parameters
         
         #after max attempts, change the parent and mutate again
+        print(f"Max attempts reached, initialization new parent")
         parent_config = self.initialize_parent()
-        self.mutate(parent_config, max_attempts)
-
+        return self.mutate(parent_config, max_attempts)
 
     def simulate_execute(self):
         distance = round(random.uniform(0.10, 40), 3)        
@@ -236,27 +242,42 @@ class EvolutionaryStrategy(object):
         return distance        
     
     def initialize_parent(self):
-        candidate_points = self.obstacle_generator.filtered_spiral
-        cand_len = len(candidate_points)
+        cand_len = len(self.candidate_points)
 
-        if(cand_len == 0):
-            #FIXME
-            raise ValueError("No candidate points available for initialization.")
+        if cand_len == 0:
+            self.candidate_points = self.obstacle_generator.recalculate_filter_spiral(self.threshold + 1)
+            cand_len = len(self.candidate_points)
         
-        # Choose random points from the candidate points
-        i = random.randint(0, cand_len-1)
+        # Shuffle the candidate points
+        random.shuffle(self.candidate_points)
+        
+        selected_point = None
 
+        # Iterate through the candidate points to find an unused one
+        for point in self.candidate_points:
+            if tuple(point) not in self.candidate_points_used:
+                selected_point = point
+                break
+
+        # If no unused point is found, recalculate and restart
+        if selected_point is None:
+            self.candidate_points = self.obstacle_generator.recalculate_filter_spiral(self.threshold + 1)
+            return self.initialize_parent() 
+
+        # Create parent parameters using the selected point
         parent_parameters = [
-            candidate_points[i][0], 
-            candidate_points[i][1],  
-            np.random.choice(np.arange(0, 91, config.ANGLE_STEP)), # Random rotation between 0 and 90 degrees (N degree steps)
-            candidate_points[i][0],  
-            candidate_points[i][1],  
-            np.random.choice(np.arange(0, 91, config.ANGLE_STEP)) # Random rotation between 0 and 90 degrees (N degree steps)
+            selected_point[0], 
+            selected_point[1],  
+            np.random.choice(np.arange(0, 91, config.ANGLE_STEP)),  # Random rotation between 0 and 90 degrees (N degree steps)
+            selected_point[0],  
+            selected_point[1],  
+            np.random.choice(np.arange(0, 91, config.ANGLE_STEP))  # Random rotation between 0 and 90 degrees (N degree steps)
         ]
 
-        self.obstacle_generator.filtered_spiral.remove(candidate_points[i])
+        # Mark the point as used
+        self.candidate_points_used.add(tuple(selected_point))
 
+        print(f"Initialization Parent: {parent_parameters}")
         return parent_parameters
 
 if __name__ == "__main__":

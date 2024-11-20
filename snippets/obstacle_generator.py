@@ -83,7 +83,7 @@ class ObstacleGenerator:
         os.makedirs(config.DIR_GENERATED_PLOTS, exist_ok=True)
 
         current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        file_path = f"{config.DIR_GENERATED_PLOTS}/obst_{current_datetime}.png"
+        file_path = f"{config.DIR_GENERATED_PLOTS}obst_{current_datetime}.png"
         plt.savefig(file_path)
         print(f"Plot saved to {file_path}")
     
@@ -217,7 +217,10 @@ class ObstacleGenerator:
         
     def is_valid(self, obstacles):
         return self.check_overlap(obstacles) and self.check_inside_area(obstacles, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
-        
+    
+    def recalculate_filter_spiral(self, threshold):
+        self.filtered_spiral = self.fibonacci_spiral.filter_spiral(self.obst_segment, threshold, config.GENERATION_AREA_MIN_POS, config.GENERATION_AREA_MAX_POS)
+
         
 if __name__ == "__main__":
     print("--- Obstacle Generator ---")
