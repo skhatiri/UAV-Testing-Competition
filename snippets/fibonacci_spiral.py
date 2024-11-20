@@ -5,6 +5,15 @@ from utils import distance_point_segment
 class FibonacciSpiral:
 
     def __init__(self, center:tuple, bottom_left:tuple, top_right:tuple):
+        """
+        Initializes a Fibonacci spiral object.
+
+        Parameters:
+        center (tuple): The center of the spiral as (x, y) coordinates.
+        bottom_left (tuple): The bottom-left corner of the boundary area as (x, y) coordinates.
+        top_right (tuple): The top-right corner of the boundary area as (x, y) coordinates.
+        """
+        
         # Center of the spiral
         self.x, self.y = center
 
@@ -21,8 +30,19 @@ class FibonacciSpiral:
         self.points = self.generate_points()
 
     def generate_points(self):
+        """
+        Generates Fibonacci spiral points within specified boundaries.
+
+        Parameters:
+        None
+
+        Returns:
+        list: A list of (x, y) tuples representing the coordinates of the spiral points that lie within the specified boundaries.
+        """
+        
         positions = []
-    
+
+        # Generate spiral points
         for i in range(self.num_points):
             radius = self.radius * (i + 1) 
             theta = i * self.angle 
@@ -38,6 +58,18 @@ class FibonacciSpiral:
         return positions
     
     def filter_spiral(self, segment, threshold_distance, bottom_left:tuple, top_right:tuple):
+        """
+        Filters the Fibonacci spiral points based on their distance from a segment and boundaries.
+
+        Parameters:
+        segment (tuple): A pair of (x, y) tuples representing the start and end points of a segment.
+        threshold_distance (float): The maximum allowable distance from the segment to include a point.
+        bottom_left (tuple): The bottom-left corner of the boundary area as (x, y) coordinates.
+        top_right (tuple): The top-right corner of the boundary area as (x, y) coordinates.
+
+        Returns:
+        list: A list of unique (x, y) tuples representing the filtered and boundary-constrained points.
+        """
         
         filtered_points = []
 

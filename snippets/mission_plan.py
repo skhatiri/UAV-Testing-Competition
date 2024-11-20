@@ -85,7 +85,6 @@ class DroneMissionPlan:
         
         return trajectory_segments
 
-
     def display_mission_summary(self):
         print("Mission Summary:")
         print(f"File Type: {self.file_type}")
@@ -98,7 +97,6 @@ class DroneMissionPlan:
         print("\nMission Items:")
         for item in self.get_mission_items3D():
             print(f"- Lat: {item['Latitude']}, Lon: {item['Longitude']}, Alt: {item['Altitude']}")
-
 
     def plot3D(self):
         # Extract lat/lon and altitude coordinates for each mission point, ignoring None values
@@ -139,7 +137,6 @@ class DroneMissionPlan:
         plt.grid(True)
         plt.axis("equal")
         plt.show()
-
 
 if __name__ == "__main__":
     # Load the mission plan from a JSON file
