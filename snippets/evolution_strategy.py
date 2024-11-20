@@ -56,7 +56,7 @@ class EvolutionaryStrategy(object):
         self.budget = 0
         self.history_mutant = set()
         self.candidate_points = self.obstacle_generator.filtered_spiral.copy()
-        self.candidate_points_used = set()
+        self.candidate_pairs_used = set()
         self.threshold = config.THRESHOLD_DISTANCE
         
     def generate(self, budget): 
@@ -274,44 +274,60 @@ class EvolutionaryStrategy(object):
         return distance        
     
     def initialize_parent(self):
+        """
+        Initializes a new parent configuration by selecting a pair of candidate points
+        and generating their parameters (positions and angles).
 
-        # Check if there are any candidate points left
+        Returns:
+        list: A list of parent parameters, including positions (x, y) and rotations (r) for two points.
+        """
+        
         cand_len = len(self.candidate_points)
 
-        if cand_len == 0:
+        if cand_len < 2:
             self.candidate_points = self.obstacle_generator.recalculate_filter_spiral(self.threshold + 1)
-            cand_len = len(self.candidate_points)
+            self.threshold += 1 # Increase threshold
+            return self.initialize_parent()
         
         # Shuffle the candidate points
         random.shuffle(self.candidate_points)
         
-        selected_point = None
+        selected_pair = None
 
-        # Iterate through the candidate points to find an unused one
-        for point in self.candidate_points:
-            if tuple(point) not in self.candidate_points_used:
-                selected_point = point
+        # Iterate through candidate points to find an unused pair
+        for i, point1 in enumerate(self.candidate_points):
+            for j, point2 in enumerate(self.candidate_points):
+                
+                 # Ensure the two points are distinct
+                if i != j:  
+                    
+                    # Check if the pair is already used
+                    pair = (tuple(point1), tuple(point2))
+                    if pair not in self.candidate_pairs_used and tuple(reversed(pair)) not in self.candidate_pairs_used:
+                        selected_pair = pair
+                        
+                        break
+            if selected_pair:
                 break
 
-        # If no unused point is found, recalculate and restart
-        if selected_point is None:
+        # If no unused pair is found, recalculate and restart
+        if selected_pair is None:
             self.candidate_points = self.obstacle_generator.recalculate_filter_spiral(self.threshold + 1)
-            return self.initialize_parent() 
+            self.threshold += 1 # Increase threshold
+            return self.initialize_parent()
 
-        # Create parent parameters using the selected point
+        # Create parent parameters
         parent_parameters = [
-            selected_point[0], 
-            selected_point[1],  
-            np.random.choice(np.arange(0, 91, config.ANGLE_STEP)),  # Random rotation between 0 and 90 degrees (N degree steps)
-            selected_point[0],  
-            selected_point[1],  
-            np.random.choice(np.arange(0, 91, config.ANGLE_STEP))  # Random rotation between 0 and 90 degrees (N degree steps)
+            selected_pair[0][0], # x1
+            selected_pair[0][1], # y1 
+            np.random.choice(np.arange(0, 91, config.ANGLE_STEP)),  # r1
+            selected_pair[1][0], # x2
+            selected_pair[1][1], # y2
+            np.random.choice(np.arange(0, 91, config.ANGLE_STEP))  # r2
         ]
 
-        # Mark the point as used
-        self.candidate_points_used.add(tuple(selected_point))
-
-        print(f"Initialization Parent: {parent_parameters}")
+        # Add the selected pair to the used pairs
+        self.candidate_pairs_used.add(selected_pair)
         return parent_parameters
 
     def mutate_child(self, parameters, max_attempts):
