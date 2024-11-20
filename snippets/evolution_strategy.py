@@ -6,6 +6,8 @@ import numpy as np
 import config
 from aerialist.px4.drone_test import DroneTest  # type: ignore
 from aerialist.px4.obstacle import Obstacle # type: ignore
+
+from config import X_RANGE, Y_RANGE
 from testcase import TestCase
 from mission_plan import DroneMissionPlan
 import signal
@@ -97,7 +99,7 @@ class EvolutionaryStrategy(object):
             if(performance_attemps < config.MAX_ATTEMPTS_PERFORMANCE):
                 
                 # Mutate
-                child_config = self.mutate(parent_config, config.MAX_ATTEMPTS_GENERATION)
+                child_config = self.mutate_child(parent_config, config.MAX_ATTEMPTS_GENERATION)
                 child_obsts = self.obstacle_generator.get_obstacles_from_parameters(child_config)
                 child_fitness = self.execution(child_obsts)
 
@@ -334,7 +336,52 @@ class EvolutionaryStrategy(object):
         return parent_parameters
 
     def mutate_child(self, parameters, max_attempts):
-        return None
+        """
+        Mutates the child
+        :param parameters:
+        :param max_attempts:
+        :return:
+        """
+
+        for attempt in range(max_attempts):
+
+            # create a copy of the father and mutate i
+            mutated_parameters = parameters.copy()
+
+            # Choose a random parameter to mutate
+            choice = np.random.uniform(0.0, 1.0)
+            # print(f"{choice}")
+            if choice < 0.4:  # Move block 1
+                new_x1 = mutated_parameters[0] + np.random.choice(X_RANGE)
+                new_y1 = mutated_parameters[1] + np.random.choice(Y_RANGE)
+                mutated_parameters[0] = new_x1
+                mutated_parameters[1] = new_y1
+
+            elif choice < 0.5:  # Rotate block 1
+                new_r1 = np.random.choice(np.arange(0, 91, config.ANGLE_STEP))
+                mutated_parameters[2] = new_r1
+
+            elif choice < 0.6:  # Move block 2
+                new_x2 = mutated_parameters[3] + np.random.choice(X_RANGE)
+                new_y2 = mutated_parameters[4] + np.random.choice(Y_RANGE)
+                mutated_parameters[3] = new_x2
+                mutated_parameters[4] = new_y2
+
+            elif choice <= 1:  # Rotate block 2
+                new_r2 = np.random.choice(np.arange(0, 91, config.ANGLE_STEP))
+                mutated_parameters[5] = new_r2
+
+            # Add hyperparameters to check validity
+            obstacles = self.obstacle_generator.get_obstacles_from_parameters(mutated_parameters)
+
+            # Check if the mutated parameters are valid
+            if (self.obstacle_generator.is_valid(obstacles) and tuple(mutated_parameters) not in self.history_mutant):
+                self.history_mutant.add(tuple(mutated_parameters))
+                return mutated_parameters
+
+        # after max attempts, change the parent and mutate again
+        parent_config = self.initialize_parent()
+        return self.mutate(parent_config, max_attempts)
     
     def mutate_parent(self, parameters, max_attempts):
         """
@@ -358,8 +405,8 @@ class EvolutionaryStrategy(object):
             choice = np.random.uniform(0, 6)
 
             if choice < 1:  # Mutation on x1
-                    new_x1 = mutated_parameters[0] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
-                    mutated_parameters[0] = new_x1
+                new_x1 = mutated_parameters[0] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
+                mutated_parameters[0] = new_x1
 
             elif choice < 2:  # Mutation on x1               
                 new_y1 = mutated_parameters[1] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
@@ -425,6 +472,8 @@ class EvolutionaryStrategy(object):
                 "GENERATION_AREA_MAX_POS": [config.GENERATION_AREA_MAX_POS[0], config.GENERATION_AREA_MAX_POS[1]],
                 "THRESHOLD_DISTANCE": config.THRESHOLD_DISTANCE,
                 "ROUND_PARAMETER": config.ROUND_PARAMETER,
+                "X_RANGE": config.X_RANGE,
+                "Y_RANGE": config.Y_RANGE,
                 "OBST_LENGTH": config.OBST_LENGTH,
                 "OBST_WIDTH": config.OBST_WIDTH,
                 "OBSTACLE_HEIGHT": config.OBSTACLE_HEIGHT,
