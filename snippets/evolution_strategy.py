@@ -409,6 +409,10 @@ class EvolutionaryStrategy(object):
         
         return parent_config
     
+    def save_results(self):
+        return None
+        
+    
 def timeout_handler(signum, frame):
     """
     Utility function: handles timeout signals by raising an exception.
