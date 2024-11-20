@@ -181,7 +181,7 @@ class EvolutionaryStrategy(object):
                 # Get the distances
                 distances = test.get_distances()
 
-            print(f"Minimum distance:{min(distances)}")
+            print(f"Minimum distance: {min(distances)}")
         except Exception as e:
             print("Exception during test execution, skipping the test")
             print(e)
@@ -255,7 +255,6 @@ class EvolutionaryStrategy(object):
                 return mutated_parameters
         
         #after max attempts, change the parent and mutate again
-        print(f"Max attempts reached, initialization new parent")
         parent_config = self.initialize_parent()
         return self.mutate(parent_config, max_attempts)
 
@@ -334,8 +333,62 @@ class EvolutionaryStrategy(object):
         return None
     
     def mutate_parent(self, parameters, max_attempts):
-        return None
-    
+        """
+        Mutates the given parent parameters by randomly modifying one parameter at a time
+        and checks for validity after each mutation. If a valid mutation is not found within
+        the maximum number of attempts, a new parent is initialized and mutation continues.
+
+        Parameters:
+        parameters (list): [x1, y1, r1, x2, y2, r2]
+        max_attempts (int): The maximum number of mutation attempts allowed.
+
+        Returns:
+        list: A new valid set of mutated parameters
+        
+        """
+        # Mutate parent
+        mutated_parameters = parameters.copy()
+
+        for attempt in range(max_attempts):
+            # Choose a random parameter to mutate
+            choice = np.random.uniform(0, 6)
+
+            if choice < 1:  # Mutation on x1
+                    new_x1 = mutated_parameters[0] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
+                    mutated_parameters[0] = new_x1
+
+            elif choice < 2:  # Mutation on x1               
+                new_y1 = mutated_parameters[1] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
+                mutated_parameters[1] = new_y1
+
+            elif choice < 3:  # Mutation on x1
+                new_r1 = np.random.choice(np.arange(0, 91, config.ANGLE_STEP))
+                mutated_parameters[2] = new_r1
+
+            elif choice < 4:  # Mutation on x1
+                new_x2 = mutated_parameters[3] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
+                mutated_parameters[3] = new_x2
+
+            elif choice < 5:  # Mutation on x1
+                new_y2 = mutated_parameters[4] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
+                mutated_parameters[4] = new_y2
+
+            else:  # Mutation on x1
+                new_r2 = np.random.choice(np.arange(0, 91, config.ANGLE_STEP))
+                mutated_parameters[5] = new_r2
+            
+            # Add hyperparameters to check validity
+            obstacles = self.obstacle_generator.get_obstacles_from_parameters(mutated_parameters)
+
+            # Check if the mutated parameters are valid
+            if(self.obstacle_generator.is_valid(obstacles)):
+                return mutated_parameters
+        
+        # After max attempts, change the parent and mutate again
+        parent_config = self.initialize_parent()
+        
+        return self.mutate_parent(parent_config, max_attempts)
+            
     def restart(self):
         """
         Restarts the evolutionary strategy by initializing a new parent configuration.
@@ -350,7 +403,7 @@ class EvolutionaryStrategy(object):
         
         # Mutate parent until it is valid
         if(not is_valid):
-            parent_config = self.mutate(parent_config, config.MAX_ATTEMPTS_GENERATION)
+            parent_config = self.mutate_parent(parent_config, config.MAX_ATTEMPTS_GENERATION)
         else:
             self.history_mutant.add(tuple(parent_config)) # Add to history
         

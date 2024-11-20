@@ -108,7 +108,7 @@ class ObstacleGenerator:
         current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         file_path = f"{config.DIR_GENERATED_PLOTS}obst_{current_datetime}.png"
         plt.savefig(file_path)
-        print(f"Plot saved to {file_path}")
+        print(f"Plot saved to: {file_path}")
     
     def getParameters(self):
         """
