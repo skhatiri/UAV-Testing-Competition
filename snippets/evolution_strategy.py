@@ -166,7 +166,6 @@ class EvolutionaryStrategy(object):
         except Exception as e:
             print("Exception during test execution, skipping the test")
             print(e)
-            return 100
         
         # Save the results
         if(min(distances) < config.MINIMUM_DISTANCE_EXECUTION):
@@ -187,8 +186,10 @@ class EvolutionaryStrategy(object):
                 json.dump(parameters, json_file, indent=4, ensure_ascii=False)
             
             print(f"Test saved to {parameters_file}")
-            self.test_counter += 1
+           
             return min(distances)
+        
+        self.test_counter += 1
 
     def mutate(self, parameters, max_attempts):
 
@@ -242,6 +243,8 @@ class EvolutionaryStrategy(object):
         return distance        
     
     def initialize_parent(self):
+
+        # Check if there are any candidate points left
         cand_len = len(self.candidate_points)
 
         if cand_len == 0:

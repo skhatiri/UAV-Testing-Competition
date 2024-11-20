@@ -27,7 +27,7 @@ MINIMUM_DISTANCE_EXECUTION = 50 # meters
 LOCAL_MINIMUM = 50
 DIR_GENERATED_PLOTS = "./generated_tests_plot/"
 DIR_GENERATED_TESTS = "./generated_tests/"
-TESTING = True
+TESTING = False
 NUM_OBSTS = 2
 
 # Obstacle Position Factor
