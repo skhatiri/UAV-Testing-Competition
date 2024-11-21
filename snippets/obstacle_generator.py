@@ -128,13 +128,18 @@ class ObstacleGenerator:
                 - Radius increment for the spiral.
             - "threshold_distance": The distance threshold for filtering spiral points.
         """
+        print(type(self.obst_segment))
+        print(type(self.segment_center))
         
         # Parameters for the simulation
         parameters = {
-            "mission": f"{self.case_study_file}",
-            "segment": f"{self.obst_segment}",
-            "fibonacci_param": f"{[self.segment_center, config.NUM_SPIRAL_POINTS, config.SPIRAL_GOLDEN_ANGLE, config.SPIRAL_RADIUS_INCREMENT]}",
-            "thresold_distance": f"{config.THRESHOLD_DISTANCE}",
+            "mission": self.case_study_file,
+            "segment": [self.obst_segment],
+            "center": self.segment_center,
+            "num_spiral_points": config.NUM_SPIRAL_POINTS,
+            "golden_angle": config.SPIRAL_GOLDEN_ANGLE,
+            "radius_increment": config.SPIRAL_RADIUS_INCREMENT,
+            "thresold_distance": config.THRESHOLD_DISTANCE,
         }
 
         return parameters
@@ -164,22 +169,22 @@ class ObstacleGenerator:
         """
         
         obstacles = [{
-            "x": parameters[0],
-            "y": parameters[1],
-            "z": config.OBST_Z,
-            "rotation": parameters[2],
-            "length": config.OBST_LENGTH,
-            "width": config.OBST_WIDTH,
-            "height": config.OBSTACLE_HEIGHT,
+            "x": float(parameters[0]),
+            "y": float(parameters[1]),
+            "z": float(config.OBST_Z),
+            "rotation": float(parameters[2]),
+            "length": float(config.OBST_LENGTH),
+            "width": float(config.OBST_WIDTH),
+            "height": float(config.OBSTACLE_HEIGHT),
         },
         {
-            "x": parameters[3],
-            "y": parameters[4],
-            "z": config.OBST_Z,
-            "rotation": parameters[5],
-            "length": config.OBST_LENGTH,
-            "width": config.OBST_WIDTH,
-            "height": config.OBSTACLE_HEIGHT,
+            "x": float(parameters[3]),
+            "y": float(parameters[4]),
+            "z": float(config.OBST_Z),
+            "rotation": float(parameters[5]),
+            "length": float(config.OBST_LENGTH),
+            "width": float(config.OBST_WIDTH),
+            "height": float(config.OBSTACLE_HEIGHT),
         }]
 
         return obstacles

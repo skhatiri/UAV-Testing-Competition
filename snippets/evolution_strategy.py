@@ -61,6 +61,7 @@ class EvolutionaryStrategy(object):
         self.candidate_pairs_used = set()
         self.threshold = config.THRESHOLD_DISTANCE
         self.total_score = 0
+        self.valid_test_cases = 0
         
     def generate(self, budget): 
         """
@@ -147,16 +148,16 @@ class EvolutionaryStrategy(object):
         for obst in obstacles:
             
             position = Obstacle.Position(
-                x=float(obst['x']), 
-                y=float(obst['y']),
-                z=float(obst['z']),
-                r=float(obst['rotation']),
+                x=obst['x'], 
+                y=obst['y'],
+                z=obst['z'],
+                r=obst['rotation'],
             )
 
             size = Obstacle.Size(
-                l=float(obst['length']), 
-                w=float(obst['width']), 
-                h=float(obst['height']),
+                l=obst['length'], 
+                w=obst['width'], 
+                h=obst['height'],
             )
             
             obstacle = Obstacle(size, position)
@@ -197,6 +198,7 @@ class EvolutionaryStrategy(object):
         if(min(distances) < config.MINIMUM_DISTANCE_EXECUTION):
 
             self.total_score += self.calculate_score(min(distances))
+            self.valid_test_cases += 1
 
             if(config.TESTING == False):
                 test.save_yaml(f"{self.tests_fld}test_{self.test_counter}.yaml")
@@ -205,8 +207,9 @@ class EvolutionaryStrategy(object):
 
             # Add minimum distance and obstacles to json
             parameters = self.obstacle_generator.getParameters()
-            parameters["obstacles"] = f"{obstacles}"
-            parameters["minimum_distance"] = f"{min(distances)}"
+            print(obstacles)
+            parameters["obstacles"] = obstacles
+            parameters["minimum_distance"] = float(min(distances))
             
             # Save the parameters to json
             parameters_file = f"{self.tests_fld}parameters_{self.test_counter}.json"
@@ -488,8 +491,9 @@ class EvolutionaryStrategy(object):
                 "TESTING": config.TESTING,
                 "NUM_OBSTS": config.NUM_OBSTS
                 },
-                "Score": {
-                    "SCORE": self.total_score,
+                "Competition": {
+                    "Score": self.total_score,
+                    "Failures": round((self.valid_test_cases / self.budget) * 100, 2),
                 }
             }
         
@@ -538,5 +542,5 @@ def timeout_handler(signum, frame):
 if __name__ == "__main__":
     # Testing
     generator = EvolutionaryStrategy("case_studies/mission3.yaml")
-    generator.generate(2) # Budget
+    generator.generate(20) # Budget
     generator.save_results()
