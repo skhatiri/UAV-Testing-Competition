@@ -56,8 +56,12 @@ if __name__ == "__main__":
         
         generator = EvolutionaryStrategy(case_study_file=args.test)
         test_cases = generator.generate(args.budget)
-        generator.save_results()
-
+        results = generator.save_results()
+        
+        print("------------------------------------")
+        print("Test cases generated successfully, check the results in: ", results)
+        print("------------------------------------")
+        
     except Exception as e:
         logger.exception("program terminated:" + str(e), exc_info=True)
         sys.exit(1)

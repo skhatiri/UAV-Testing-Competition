@@ -221,51 +221,6 @@ class EvolutionaryStrategy(object):
         # Update the test counter
         self.test_counter += 1
         return min(distances)       
-                
-    def mutate(self, parameters, max_attempts):
-
-        mutated_parameters = parameters.copy()
-
-        for attempt in range(max_attempts):
-
-            #Choose a random parameter to mutate
-            choice = np.random.uniform(0, 6)
-
-            if choice < 1:  # Mutation on x1
-                    new_x1 = mutated_parameters[0] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
-                    mutated_parameters[0] = new_x1
-
-            elif choice < 2:  # Mutation on x1               
-                new_y1 = mutated_parameters[1] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
-                mutated_parameters[1] = new_y1
-
-            elif choice < 3:  # Mutation on x1
-                new_r1 = np.random.choice(np.arange(0, 91, config.ANGLE_STEP))
-                mutated_parameters[2] = new_r1
-
-            elif choice < 4:  # Mutation on x1
-                new_x2 = mutated_parameters[3] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
-                mutated_parameters[3] = new_x2
-
-            elif choice < 5:  # Mutation on x1
-                new_y2 = mutated_parameters[4] + np.random.choice([-config.ROUND_PARAMETER, config.ROUND_PARAMETER])
-                mutated_parameters[4] = new_y2
-
-            else:  # Mutation on x1
-                new_r2 = np.random.choice(np.arange(0, 91, config.ANGLE_STEP))
-                mutated_parameters[5] = new_r2
-            
-            # Add hyperparameters to check validity
-            obstacles = self.obstacle_generator.get_obstacles_from_parameters(mutated_parameters)
-
-            # Check if the mutated parameters are valid
-            if(self.obstacle_generator.is_valid(obstacles) and tuple(mutated_parameters) not in self.history_mutant):
-                self.history_mutant.add(tuple(mutated_parameters))
-                return mutated_parameters
-        
-        #after max attempts, change the parent and mutate again
-        parent_config = self.initialize_parent()
-        return self.mutate(parent_config, max_attempts)
 
     def simulate_execute(self):
         """
@@ -384,7 +339,7 @@ class EvolutionaryStrategy(object):
 
         # after max attempts, change the parent and mutate again
         parent_config = self.initialize_parent()
-        return self.mutate(parent_config, max_attempts)
+        return self.mutate_child(parent_config, max_attempts)
     
     def mutate_parent(self, parameters, max_attempts):
         """
@@ -504,6 +459,8 @@ class EvolutionaryStrategy(object):
             
         except Exception as e:
             print(f"An error occurred: {e}")
+            
+        return self.tests_fld
             
     def calculate_score(self, min_dist):
         """
