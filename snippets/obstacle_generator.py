@@ -128,8 +128,6 @@ class ObstacleGenerator:
                 - Radius increment for the spiral.
             - "threshold_distance": The distance threshold for filtering spiral points.
         """
-        print(type(self.obst_segment))
-        print(type(self.segment_center))
         
         # Parameters for the simulation
         parameters = {
