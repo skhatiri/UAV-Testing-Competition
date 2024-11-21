@@ -145,16 +145,16 @@ class EvolutionaryStrategy(object):
         for obst in obstacles:
             
             position = Obstacle.Position(
-                x=obst['x'], 
-                y=obst['y'], 
-                z=obst['z'],
-                r=obst['rotation'],
+                x=float(obst['x']), 
+                y=float(obst['y']),
+                z=float(obst['z']),
+                r=float(obst['rotation']),
             )
 
             size = Obstacle.Size(
-                l=obst['length'], 
-                w=obst['width'], 
-                h=obst['height'],
+                l=float(obst['length']), 
+                w=float(obst['width']), 
+                h=float(obst['height']),
             )
             
             obstacle = Obstacle(size, position)
@@ -489,5 +489,5 @@ def timeout_handler(signum, frame):
 if __name__ == "__main__":
     # Testing
     generator = EvolutionaryStrategy("case_studies/mission3.yaml")
-    generator.generate(200) # Budget
+    generator.generate(2) # Budget
     generator.save_results()
