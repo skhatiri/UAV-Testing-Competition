@@ -13,6 +13,13 @@ GENERATION_AREA_MAX_POS = (30,40)
 THRESHOLD_DISTANCE = 3 #meters
 ROUND_PARAMETER = 1
 
+# Discrete steps on x and y when mutating
+DRONE_SIZE = 0.55
+X_RANGE = [-4, -3, -2, 2, 3, 4]
+Y_RANGE = [-4, -3, -2, 2, 3, 4]
+X_RANGE = [x * DRONE_SIZE for x in X_RANGE]
+Y_RANGE = [x * DRONE_SIZE for x in Y_RANGE]
+
 #Obstacles
 OBST_LENGTH = 10 #meters
 OBST_WIDTH = 20 #meters 
@@ -27,5 +34,5 @@ MINIMUM_DISTANCE_EXECUTION = 50 # meters
 LOCAL_MINIMUM = 50
 DIR_GENERATED_PLOTS = "./generated_tests_plot/"
 DIR_GENERATED_TESTS = "./generated_tests/"
-TESTING = True
+TESTING = False
 NUM_OBSTS = 2
