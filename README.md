@@ -3,7 +3,7 @@
 ## Description
 This repository contains the implementation for the [UAV Testing Competition](https://conf.researchr.org/track/icst-2025/icst-2025-tool-competition--uav-testing), which challenges participants to create and evaluate efficient test scenarios for Unmanned Aerial Vehicles (UAVs).
 
-This project implements a test case generation algorithm using advanced techniques such as `Evolution Strategies`, specifically the `EE-(1+1) algorithm`, which iteratively evolves solutions to maximize the efficiency and diversity of the test cases. Additionally, a `Fibonacci Spiral Point Selection methodology` is used to optimize the distribution of points, ensuring uniform coverage in testing scenarios.
+This project implements a test case generation algorithm using advanced techniques such as `Evolution Strategies`, specifically the `EE-(1+1) algorithm`, which iteratively evolves solutions to minize the distance and diversity of the test cases. Additionally, a `Fibonacci Spiral Point Selection methodology` is used to optimize the distribution of points, ensuring uniform coverage in testing scenarios.
 
 ![cover](cover.png)
 
