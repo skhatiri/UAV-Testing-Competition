@@ -15,14 +15,14 @@ ROUND_PARAMETER = 1
 
 # Discrete steps on x and y when mutating
 DRONE_SIZE = 0.55
-X_RANGE = [-4, -3, -2, 2, 3, 4]
-Y_RANGE = [-4, -3, -2, 2, 3, 4]
+X_RANGE = [-15, -10, -5, 5, 10, 15]
+Y_RANGE = [-15, -10, -5, 5, 10, 15]
 X_RANGE = [x * DRONE_SIZE for x in X_RANGE]
 Y_RANGE = [x * DRONE_SIZE for x in Y_RANGE]
 
 #Obstacles
-OBST_LENGTH = 10 #meters
-OBST_WIDTH = 20 #meters 
+OBST_LENGTH = 20 #meters
+OBST_WIDTH = 2 #meters 
 OBSTACLE_HEIGHT = 25 #meters
 OBST_Z = 0
 ANGLE_STEP = 10

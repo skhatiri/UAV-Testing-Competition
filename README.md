@@ -1,4 +1,4 @@
-# UAV Testing Competition
+# Evolv-1 at ICST/SBFT 2025 Tool Competition - CPS-UAV Test Case Generation Track
 
 ## Description
 This repository contains the implementation for the [UAV Testing Competition](https://conf.researchr.org/track/icst-2025/icst-2025-tool-competition--uav-testing), which challenges participants to create and evaluate efficient test scenarios for Unmanned Aerial Vehicles (UAVs).
@@ -10,7 +10,7 @@ This project implements a test case generation algorithm using advanced techniqu
 ## Repository Structure
 
 ```python
-📦 name/
+📦 evolv-1/
 ├── 📁 docs/ # Documentation
 ├── 📁 reports/ # Competition Report 2024
 ├── 📁 snippets/ # Scripts
@@ -49,7 +49,7 @@ git clone https://github.com/se-fbk/UAV-Testing-Competition.git
 Navigate to the `snippets` directory and build the Docker image:
 ```bash
 cd name/snippets/
-docker build -t name .
+docker build -t evolv-1 .
 ```
 
 3. Run the Docker Container
@@ -60,7 +60,7 @@ xhost +
 docker run --env DISPLAY=$DISPLAY \
     -v "/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     -v "$(pwd):/src/generator" \
-    -it name bash
+    -it evolv-1 bash
 
 ```
 
