@@ -48,7 +48,7 @@ git clone https://github.com/se-fbk/UAV-Testing-Competition.git
 
 Navigate to the `snippets` directory and build the Docker image:
 ```bash
-cd evolv-1/snippets/
+cd UAV-Testing-Competition/snippets/
 docker build -t evolv-1 .
 ```
 
