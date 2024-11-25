@@ -10,7 +10,7 @@ This project implements a test case generation algorithm using advanced techniqu
 ## Repository Structure
 
 ```python
-📦 evolv-1/
+📦 UAV-Testing-Competition/
 ├── 📁 docs/ # Documentation
 ├── 📁 reports/ # Competition Report 2024
 ├── 📁 snippets/ # Scripts
