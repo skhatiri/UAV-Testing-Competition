@@ -29,8 +29,12 @@ The UAV Testing Competition organized jointly by the [International Conference o
 - [Contacts](#contacts)
   
 ## Announcements
-### Deadline Extension
 
+### SBFT Deadline Extension
+
+- The deadline is extended to 8 December 2025 for [SBFT@ICSE](https://sbft25.github.io/) participants.
+
+### Deadline Extension
 - The deadline is extended to 24 November 2025 for [ICST](https://conf.researchr.org/home/icst-2025) participants.
 - The deadline is extended to 1 December 2025 for [SBFT@ICSE](https://sbft25.github.io/) participants.
 
