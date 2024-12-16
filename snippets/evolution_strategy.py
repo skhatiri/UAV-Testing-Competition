@@ -39,11 +39,7 @@ class EvolutionaryStrategy(object):
         # Reading mission plan content
         self.case_study = DroneTest.from_yaml(case_study_file)
         self.case_study_file = case_study_file
-        with open(self.case_study_file, 'r') as file:
-            yaml_content = yaml.safe_load(file)
-        
-        mission_file = yaml_content.get("drone", {}).get("mission_file")
-        self.mission_plan = DroneMissionPlan(mission_file)
+        self.mission_plan = DroneMissionPlan(self.case_study.drone.mission_file)
 
         # Create obstacle Generator based on mission plan
         self.obstacle_generator = ObstacleGenerator(self.mission_plan, case_study_file)
