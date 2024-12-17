@@ -7,6 +7,7 @@ import shutil
 import sys
 from decouple import config
 from random_generator import RandomGenerator
+from aerialist.px4 import file_helper
 
 TESTS_FOLDER = config("TESTS_FOLDER", default="./generated_tests/")
 logger = logging.getLogger(__name__)
@@ -70,6 +71,10 @@ if __name__ == "__main__":
             shutil.copy2(test_cases[i].plot_file, f"{tests_fld}/test_{i}.png")
         print(f"{len(test_cases)} test cases generated")
         print(f"output folder: {tests_fld}")
+        if config("AGENT" == "k8s"):
+            file_helper.upload_dir(
+                tests_fld, f'{config("WEBDAV_UP_FLD")}generated_tests/'
+            )
 
     except Exception as e:
         logger.exception("program terminated:" + str(e), exc_info=True)
