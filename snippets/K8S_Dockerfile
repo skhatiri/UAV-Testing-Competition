@@ -1,0 +1,15 @@
+FROM skhatiri/aerialist:k8s
+
+RUN pip3 install -e /src/aerialist/ --no-deps
+
+COPY ./requirements.txt /src/generator/requirements.txt
+WORKDIR /src/generator/
+RUN pip3 install -r /src/generator/requirements.txt
+
+COPY ./ /src/generator/
+RUN mkdir -p ./logs/ ./results/ ./generated_tests/ ./tmp/
+
+ENV AGENT k8s
+ENV ROS_KUBE_TEMPLATE /src/aerialist/aerialist/resources/k8s/k8s-job-avoidance.yaml
+ENV KUBE_TEMPLATE /src/aerialist/aerialist/resources/k8s/k8s-job.yaml
+

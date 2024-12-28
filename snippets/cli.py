@@ -4,8 +4,11 @@ import logging
 import os
 import sys
 from evolution_strategy import EvolutionaryStrategy
+from decouple import config
+from aerialist.px4 import file_helper
 
 logger = logging.getLogger(__name__)
+
 
 def arg_parse():
     main_parser = ArgumentParser(
@@ -53,15 +56,19 @@ if __name__ == "__main__":
     config_loggers()
     try:
         args = arg_parse()
-        
+
         generator = EvolutionaryStrategy(case_study_file=args.test)
         test_cases = generator.generate(args.budget)
         results = generator.save_results()
-        
+
         print("------------------------------------")
         print("Test cases generated successfully, check the results in: ", results)
         print("------------------------------------")
-        
+        if config("AGENT") == "k8s":
+            file_helper.upload_dir(
+                results, f'{config("WEBDAV_UP_FLD")}generated_tests/'
+            )
+
     except Exception as e:
         logger.exception("program terminated:" + str(e), exc_info=True)
         sys.exit(1)
