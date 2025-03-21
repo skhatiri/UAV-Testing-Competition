@@ -31,7 +31,7 @@ The UAV Testing Competition organized jointly by the [International Conference o
 ## Announcements
 
 ### Evaluation Report and Ranking
-The competition report and the ranking is out. Here is the overal ranking, while more details can be found in the competition reports ([ICST preprint](reports\UAV_Competition_ICST_2025.pdf), [SBFT preprint](reports\UAV_Competition_SBFT_2025.pdf)) and the [evaluation artifacts](https://doi.org/10.5281/zenodo.14714469).
+The competition report and the ranking is out. Here is the overal ranking, while more details can be found in the competition reports ([ICST preprint](reports/UAV_Competition_ICST_2025.pdf), [SBFT preprint](reports/UAV_Competition_SBFT_2025.pdf)) and the [evaluation artifacts](https://doi.org/10.5281/zenodo.14714469).
 
 |      **Tool**     | **Venue** | **#Obst.** |  **CS2** |              |              | **CS4** |              |              | **CS5** |              |              |    **SUM**    |              | **Final Rank** |
 |:-----------------:|:---------:|:----------:|:--------:|:------------:|:------------:|:-------:|:------------:|:------------:|:-------:|:------------:|:------------:|:-------------:|:------------:|:--------------:|
@@ -370,7 +370,7 @@ The competition has been held in the following editions:
 - **2<sup>nd</sup> Edition**: ICST 2025 and SBFT@ICSE 2025
   - [Competition Call](#uav-testing-competition)
   - [Competition Ranking](#evaluation-report-and-ranking)  
-  - Competition Reports: [ICST](reports\UAV_Competition_ICST_2025.pdf), [SBFT](reports\UAV_Competition_SBFT_2025.pdf)
+  - Competition Reports: [ICST](reports/UAV_Competition_ICST_2025.pdf), [SBFT](reports/UAV_Competition_SBFT_2025.pdf)
   - [Evaluation Artifacts](https://doi.org/10.5281/zenodo.14714469)
 
 ## References
