@@ -2,7 +2,7 @@ import copy
 import logging
 from typing import List
 from decouple import config
-from aerialist.px4.drone_test import DroneTest, AgentConfig
+from aerialist.px4.aerialist_test import AerialistTest, AgentConfig
 from aerialist.px4.obstacle import Obstacle
 from aerialist.px4.trajectory import Trajectory
 
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 class TestCase(object):
-    def __init__(self, casestudy: DroneTest, obstacles: List[Obstacle]):
+    def __init__(self, casestudy: AerialistTest, obstacles: List[Obstacle]):
         self.test = copy.deepcopy(casestudy)
         self.test.simulation.obstacles = obstacles
 
@@ -43,7 +43,7 @@ class TestCase(object):
         ]
 
     def plot(self):
-        self.plot_file = DroneTest.plot(self.test, self.test_results)
+        self.plot_file = AerialistTest.plot(self.test, self.test_results)
 
     def save_yaml(self, path):
         self.test.to_yaml(path)
