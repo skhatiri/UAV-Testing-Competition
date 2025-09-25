@@ -1,5 +1,10 @@
 # UAV Testing Competition
 
+<p align="center">
+  <img src="figures/uav1.gif" width="45%" height="45%" style="object-fit:cover; aspect-ratio:5/4; display:inline-block; margin-right:10px;"/>
+  <img src="figures/uav2.gif" width="45%" height="45%" style="object-fit:cover; aspect-ratio:5/4; display:inline-block;"/>
+</p>
+
 Unmanned Aerial Vehicles (UAVs) equipped with onboard cameras and various sensors have already demonstrated the possibility of autonomous flights in real environments, leading to great interest in various application scenarios: crop monitoring, surveillance, medical and food delivery.
 
 Over the years, support for UAV developers has increased with open-access projects for software and hardware, such as the autopilot support provided by [PX4](https://github.com/PX4/PX4-Autopilot) and [Ardupilot](https://github.com/ArduPilot/ardupilot).
