@@ -1,6 +1,6 @@
 import random
 from typing import List
-from aerialist.px4.drone_test import DroneTest
+from aerialist.px4.aerialist_test import AerialistTest
 from aerialist.px4.obstacle import Obstacle
 from testcase import TestCase
 
@@ -12,7 +12,7 @@ class RandomGenerator(object):
     max_position = Obstacle.Position(50, 50, 0, 90)
 
     def __init__(self, case_study_file: str) -> None:
-        self.case_study = DroneTest.from_yaml(case_study_file)
+        self.case_study = AerialistTest.from_yaml(case_study_file)
 
     def generate(self, budget: int) -> List[TestCase]:
         test_cases = []

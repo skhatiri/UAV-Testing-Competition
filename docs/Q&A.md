@@ -44,7 +44,7 @@ Currently, there is no automated way of predicting the feasibility of the test c
 You can add some simple sanity checks to the obstacle configurations (e.g., having no overlaps)
 
 ### 12) Do we need to use the class TestCase in our generator or can we implement our own?
-This is only a sample code to help you. You can implement your own class or extend it as you wish, but you should keep using the Aerialist functionalities and built-in classes (specifically DroneTest) for test case properties.
+This is only a sample code to help you. You can implement your own class or extend it as you wish, but you should keep using the Aerialist functionalities and built-in classes (specifically AerialistTest) for test case properties.
 
 ### 13) How is the budget managed? Do we need to set a maximum number of possible simulations inside our code (as in the random generator given as an example)? Or will the pipeline of the competition stop our generator after a maximum number of simulations have been called?
 The random generator is a good example of how the interface of your final test generator should look like. You need to take the case study, and the generation budget as inputs, and stop the generation process before running out of budget. The platform will not check the budget automatically, but we will make sure that your code does not go over the budget.
