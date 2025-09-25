@@ -1,6 +1,19 @@
 # Announcements and Updates
 
-## Evaluation Report and Ranking (3.03.2024)
+## 2<sup>nd</sup> Edition - Evaluation Report and Ranking (3.21.2025)
+The competition report and the ranking is out. Here is the overal ranking, while more details can be found in the competition reports ([ICST preprint](reports/UAV_Competition_ICST_2025.pdf), [SBFT preprint](reports/UAV_Competition_SBFT_2025.pdf)) and the [evaluation artifacts](https://doi.org/10.5281/zenodo.14714469).
+
+|      **Tool**     | **Venue** | **#Obst.** |  **CS2** |              |              | **CS4** |              |              | **CS5** |              |              |    **SUM**    |              | **Final Rank** |
+|:-----------------:|:---------:|:----------:|:--------:|:------------:|:------------:|:-------:|:------------:|:------------:|:-------:|:------------:|:------------:|:-------------:|:------------:|:--------------:|
+|                   |           |            |  #tests  |    failure   |   diversity  |  #tests |    failure   |   diversity  |  #tests |    failure   |   diversity  |    failure    |   diversity  |                |
+| **Pseudo-Random** |    SBFT   |      2     |   31 (7) |   5.25 (2)   |   0.86 (4)   | 66 (12) | **9.30 (1)** |   0.87 (3)   |  17 (5) |   2.71 (2)   |   0.82 (4)   | **17.26 (5)** |   2.57 (11)  |  **6.50 (1)**  |
+|    **Evolv-1**    |    ICST   |      2     |  57 (12) | **9.02 (1)** |   0.88 (3)   |  22 (2) |   1.08 (5)   |   0.82 (4)   |  37 (6) | **2.93 (1)** |   0.85 (3)   |   13.04 (7)   |   2.57 (10)  |    7.75 (2)    |
+|    **TGen-UQ**    |    ICST   |      2     |   5 (1)  |   0.50 (4)   | **1.00 (1)** |  6 (1)  |   1.44 (4)   | **0.94 (1)** |  6 (0)  |   0.00 (5)   |   0.89 (2)   |    1.95 (13)  | **2.84 (4)** |    10.75 (3)   |
+|      **PALM**     |    ICST   |     2,3    |  58 (1)  |   0.14 (6)   |   0.57 (5)   | 82 (20) |   3.58 (2)   |   0.42 (5)   | 76 (19) |   0.80 (3)   |   0.46 (5)   |   4.52 (11)   |   1.47 (15)  |    12.00 (4)   |
+|   **Surrealist**  |  Baseline |      2     |  52 (11) |   4.16 (3)   |   0.21 (6)   |  9 (3)  |   1.93 (3)   |   0.20 (6)   |   9 (1) |   0.11 (4)   |   0.18 (6)   |   6.21 (10)   |   0.60 (18)  |    12.00 (4)   |
+|  **OptObstacles** |    SBFT   |     2,3    |   3 (1)  |   0.44 (5)   |   0.93 (2)   |  7 (0)  |   0.00 (6)   |   0.92 (2)   |  2 (0)  |   0.00 (5)   | **0.89 (1)** |    0.44 (16)  |   2.75 (5)   |    13.25 (6)   |
+
+## 1<sup>st</sup> Edition - Evaluation Report and Ranking (3.03.2024)
 
 The competition report and the ranking is out. Here is the overal ranking, while more details can be found in the competition report ([preprint](reports/UAV_Competition_SBFT_2024.pdf)).
 

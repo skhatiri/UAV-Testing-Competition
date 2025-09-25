@@ -1,11 +1,16 @@
 # UAV Testing Competition
 
+<p align="center">
+  <img src="figures/uav1.gif" width="45%" height="45%"/>
+  <img src="figures/uav2.gif" width="45%" height="45%"/>
+</p>
+
 Unmanned Aerial Vehicles (UAVs) equipped with onboard cameras and various sensors have already demonstrated the possibility of autonomous flights in real environments, leading to great interest in various application scenarios: crop monitoring, surveillance, medical and food delivery.
 
 Over the years, support for UAV developers has increased with open-access projects for software and hardware, such as the autopilot support provided by [PX4](https://github.com/PX4/PX4-Autopilot) and [Ardupilot](https://github.com/ArduPilot/ardupilot).
 However, despite the necessity of systematically testing such complex and automated systems to ensure their safe operation in real-world environments, there has been relatively limited investment in this direction so far.
 
-The UAV Testing Competition organized jointly by the [International Conference on Software Testing, Verification and Validation (ICST)](https://conf.researchr.org/home/icst-2025) and [Search-Based and Fuzz Testing (SBFT) workshop](https://sbft25.github.io/) is an initiative designed to inspire and encourage the Software Testing Community to direct their attention toward UAVs as a rapidly emerging and crucial domain. The joint call is meant to help interested authors/participants reduce travel costs by selecting the most convenient and close venue.
+The UAV Testing Competition organized jointly by the [International Conference on Software Testing, Verification and Validation (ICST)](https://conf.researchr.org/home/icst-2026) and [Search-Based and Fuzz Testing (SBFT) workshop](https://search-based-and-fuzz-testing.github.io/sbft26/) is an initiative designed to inspire and encourage the Software Testing Community to direct their attention toward UAVs as a rapidly emerging and crucial domain. The joint call is meant to help interested authors/participants reduce travel costs by selecting the most convenient and close venue.
 
 ## Table of Contents
 
@@ -30,40 +35,31 @@ The UAV Testing Competition organized jointly by the [International Conference o
   
 ## Announcements
 
-### Evaluation Report and Ranking
-The competition report and the ranking is out. Here is the overal ranking, while more details can be found in the competition reports ([ICST preprint](reports/UAV_Competition_ICST_2025.pdf), [SBFT preprint](reports/UAV_Competition_SBFT_2025.pdf)) and the [evaluation artifacts](https://doi.org/10.5281/zenodo.14714469).
+*The UAV Testing competition is back on for a 3<sup>rd</sup> Edition at SBFT@ICSE and at ICST 2026!*
 
-|      **Tool**     | **Venue** | **#Obst.** |  **CS2** |              |              | **CS4** |              |              | **CS5** |              |              |    **SUM**    |              | **Final Rank** |
-|:-----------------:|:---------:|:----------:|:--------:|:------------:|:------------:|:-------:|:------------:|:------------:|:-------:|:------------:|:------------:|:-------------:|:------------:|:--------------:|
-|                   |           |            |  #tests  |    failure   |   diversity  |  #tests |    failure   |   diversity  |  #tests |    failure   |   diversity  |    failure    |   diversity  |                |
-| **Pseudo-Random** |    SBFT   |      2     |   31 (7) |   5.25 (2)   |   0.86 (4)   | 66 (12) | **9.30 (1)** |   0.87 (3)   |  17 (5) |   2.71 (2)   |   0.82 (4)   | **17.26 (5)** |   2.57 (11)  |  **6.50 (1)**  |
-|    **Evolv-1**    |    ICST   |      2     |  57 (12) | **9.02 (1)** |   0.88 (3)   |  22 (2) |   1.08 (5)   |   0.82 (4)   |  37 (6) | **2.93 (1)** |   0.85 (3)   |   13.04 (7)   |   2.57 (10)  |    7.75 (2)    |
-|    **TGen-UQ**    |    ICST   |      2     |   5 (1)  |   0.50 (4)   | **1.00 (1)** |  6 (1)  |   1.44 (4)   | **0.94 (1)** |  6 (0)  |   0.00 (5)   |   0.89 (2)   |    1.95 (13)  | **2.84 (4)** |    10.75 (3)   |
-|      **PALM**     |    ICST   |     2,3    |  58 (1)  |   0.14 (6)   |   0.57 (5)   | 82 (20) |   3.58 (2)   |   0.42 (5)   | 76 (19) |   0.80 (3)   |   0.46 (5)   |   4.52 (11)   |   1.47 (15)  |    12.00 (4)   |
-|   **Surrealist**  |  Baseline |      2     |  52 (11) |   4.16 (3)   |   0.21 (6)   |  9 (3)  |   1.93 (3)   |   0.20 (6)   |   9 (1) |   0.11 (4)   |   0.18 (6)   |   6.21 (10)   |   0.60 (18)  |    12.00 (4)   |
-|  **OptObstacles** |    SBFT   |     2,3    |   3 (1)  |   0.44 (5)   |   0.93 (2)   |  7 (0)  |   0.00 (6)   |   0.92 (2)   |  2 (0)  |   0.00 (5)   | **0.89 (1)** |    0.44 (16)  |   2.75 (5)   |    13.25 (6)   |
+### Competition Call
 
-
-### SBFT Deadline Extension
-
-- The deadline is extended to 8 December 2024 for [SBFT@ICSE](https://sbft25.github.io/) participants.
-
-### Deadline Extension
-- The deadline is extended to 24 November 2024 for [ICST](https://conf.researchr.org/home/icst-2025) participants.
-- The deadline is extended to 1 December 2024 for [SBFT@ICSE](https://sbft25.github.io/) participants.
-
-### 2<sup>nd</sup> Edition at ICST/SBFT 2025
-
-*The UAV Testing competition is back on!*
-
-This year, we are extending the competition to [ICST](https://conf.researchr.org/home/icst-2025), while still organizing it at [SBFT](https://sbft25.github.io/).
-
-The competition call, deadlines, guidelines, and evaluation, will be identical for the two calls.
+The competition call, guidelines, and evaluation, are identical for the two calls.
 You will have the option to choose where you want to participate and compete against the other competitors who applied for the same venue.
 
-**Take a look at the [report of the previous edition](/reports/UAV_Competition_SBFT_2024.pdf) to get familiar with the process.**
+#### Submission - SBFT@ICSE
 
-**You can find previous announcements and updates [here](docs/updates.md).**
+The submission details for [SBFT@ICSE](https://search-based-and-fuzz-testing.github.io/sbft26/) participants are as follows:
+- **Submission Deadline**: 31.11.2025 (AoE)
+- **Notification**: 22.12.2025 (AoE)
+
+#### Submission - ICST
+
+The submission details for [ICST](https://conf.researchr.org/home/icst-2026) participants are as follows:
+- **Submission Deadline**: end-of-November (tentative)
+- **Notification**: end-of-December (tentative)
+
+
+### Previous Editions
+
+Take a look at the reports of the previous edition ([SBFT@ICSE](/reports/UAV_Competition_SBFT_2025.pdf), [ICST](reports/UAV_Competition_ICST_2025.pdf)) to get familiar with the process.
+
+You can find announcements and updates from previous editions [here](docs/updates.md).
 
 ## Overview
 
@@ -278,17 +274,13 @@ Due to the computational complexity of evaluation, we ask all the participats to
 
 ## Competition Guideline
 
-Please read the [report of the previous edition](/reports/UAV_Competition_SBFT_2024.pdf) in detail to gain a better understanding of the competition guidelines, evaluation criteria, and process. Some details may vary in the new edition (e.g., the evaluation metrics).
+Please read one of the two reports of the previous edition ([SBFT@ICSE](/reports/UAV_Competition_SBFT_2025.pdf), [ICST](reports/UAV_Competition_ICST_2025.pdf)) in detail to gain a better understanding of the competition guidelines, evaluation criteria, and process. Some details may vary in the new edition (e.g., the evaluation metrics).
 
 ### Submission
 
 Follow the [Submission Guideline](./docs/submission.md), prepare your code as explained, and send it to the organization committee.
 
-You can freely decide on the venue you want to compete in: **ICST 2025 or SBFT@ICSE 2025**.
-Participants in each venue will be evaluated and ranked independently.
-
-- **Submission Deadline**: 17.11.2024 (AoE)
-- **Notification**: 15.12.2024 (AoE)
+Further submisison details, such as deadlines and venues, are detailed in the [Announcements](#announcements) section.
 
 ### Evaluation
 
@@ -360,6 +352,13 @@ This ensures a fair and comprehensive evaluation of the generated tests, allowin
 
 The competition has been held in the following editions:
 
+
+- **2<sup>nd</sup> Edition**: ICST 2025 and SBFT@ICSE 2025
+  - [Competition Call](https://github.com/skhatiri/UAV-Testing-Competition/tree/ICST/SBFT_2025)
+  - [Competition Ranking](https://github.com/skhatiri/UAV-Testing-Competition/tree/ICST/SBFT_2025#evaluation-report-and-ranking)  
+  - Competition Reports: [ICST](reports/UAV_Competition_ICST_2025.pdf), [SBFT](reports/UAV_Competition_SBFT_2025.pdf)
+  - [Evaluation Artifacts](https://doi.org/10.5281/zenodo.14714469)
+
 - **1<sup>st</sup> Edition**: SBFT@ICSE 2024
   - [Competition Call](https://github.com/skhatiri/UAV-Testing-Competition/tree/SBFT2024)
   - [Competition Ranking](https://github.com/skhatiri/UAV-Testing-Competition/tree/SBFT2024-Results#evaluation-report-and-ranking)
@@ -367,18 +366,12 @@ The competition has been held in the following editions:
   - [Evaluation Artifacts](https://doi.org/10.5281/zenodo.10605583)
 
 
-- **2<sup>nd</sup> Edition**: ICST 2025 and SBFT@ICSE 2025
-  - [Competition Call](#uav-testing-competition)
-  - [Competition Ranking](#evaluation-report-and-ranking)  
-  - Competition Reports: [ICST](reports/UAV_Competition_ICST_2025.pdf), [SBFT](reports/UAV_Competition_SBFT_2025.pdf)
-  - [Evaluation Artifacts](https://doi.org/10.5281/zenodo.14714469)
 
 ## References
 
 If you use this tool in your research, please cite the following papers:
 
-- **Sajad Khatiri**, Sebastiano Panichella, and Paolo Tonella, "Simulation-based Testing of Unmanned Aerial Vehicles with Aerialist," *In 2024 International Conference on Software Engineering (ICSE)*
-  - [Preprint](https://skhatiri.ir/papers/aerialist.pdf)
+- **Sajad Khatiri**, Sebastiano Panichella, and Paolo Tonella, "Simulation-based Testing of Unmanned Aerial Vehicles with Aerialist," *In 2024 International Conference on Software Engineering (ICSE)*. [Link](https://dl.acm.org/doi/10.1145/3639478.3640031).
 
   ````{code-block} bibtex
   @inproceedings{icse2024Aerialist,
@@ -389,8 +382,7 @@ If you use this tool in your research, please cite the following papers:
   }
   ````
 
-- **Sajad Khatiri**, Prasun Saurabh, Timothy Zimmermann, Charith Munasinghe, Christian Birchler, and Sebastiano Panichella, "SBFT Tool Competition 2024 - CPS-UAV Test Case Generation Track," *In 2024 IEEE/ACM International Workshop on Search-Based and Fuzz Testing*
-  - [Link](reports/UAV_Competition_SBFT_2024.pdf)
+- **Sajad Khatiri**, Prasun Saurabh, Timothy Zimmermann, Charith Munasinghe, Christian Birchler, and Sebastiano Panichella, "SBFT Tool Competition 2024 - CPS-UAV Test Case Generation Track," *In 2024 IEEE/ACM International Workshop on Search-Based and Fuzz Testing*. [Link](reports/UAV_Competition_SBFT_2024.pdf).
 
   ````{code-block} bibtex
   @inproceedings{SBFT-UAV2024,
@@ -402,8 +394,7 @@ If you use this tool in your research, please cite the following papers:
   }
   ````
 
-- **Sajad Khatiri**, Sebastiano Panichella, and Paolo Tonella, "Simulation-based Test Case Generation for Unmanned Aerial Vehicles in the Neighborhood of Real Flights," *In 2023 IEEE 16th International Conference on Software Testing, Verification and Validation (ICST)*
-  - [Link](https://ieeexplore.ieee.org/document/10132225)
+- **Sajad Khatiri**, Sebastiano Panichella, and Paolo Tonella, "Simulation-based Test Case Generation for Unmanned Aerial Vehicles in the Neighborhood of Real Flights," *In 2023 IEEE 16th International Conference on Software Testing, Verification and Validation (ICST)*. [Link](https://ieeexplore.ieee.org/document/10132225).
 
   ````{code-block} bibtex
   @inproceedings{khatiri2023simulation,
@@ -426,8 +417,11 @@ Feel free to use the [Discussions](https://github.com/skhatiri/UAV-Testing-Compe
 
 You can also contact us directly using email:
 
-- Sajad Khatiri (Università della Svizzera italiana) - <mazras@usi.ch>
+- Sajad Khatiri (University of Bern) - <sajad.mazraehkhatiri@unibe.ch>
 - Prasun Saurabh (Università della Svizzera italiana) - <saurap@usi.ch>
-- Tahereh Zohdinasab (Università della Svizzera italiana) - <tahereh.zohdinasab@usi.ch>
+- Ali Javadi (University of Bern) - <ali.javadi@unibe.ch>
+- Ramazan Erdem Uysal (University of Bern) - <ramazan.uysal@unibe.ch>
 - Dmytro Humeniuk (École Polytechnique de Montréal) - <dmytro.humeniuk@polymtl.ca>
+-	Prakash Aryan (University of Bern) - <prakash.aryan@unibe.ch>
+-	Aren Babikian (University of toronto) - <babikian@utoronto.edu>
 - Sebastiano Panichella (University of Bern) - <spanichella@gmail.com>
