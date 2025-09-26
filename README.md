@@ -51,8 +51,8 @@ The submission details for [SBFT@ICSE](https://search-based-and-fuzz-testing.git
 #### Submission - ICST
 
 The submission details for [ICST](https://conf.researchr.org/home/icst-2026) participants are as follows:
-- **Submission Deadline**: end-of-November (tentative)
-- **Notification**: end-of-December (tentative)
+- **Submission Deadline**: Mid or Late February 2026 (tentative)
+- **Notification**: Mid March 2026 (tentative)
 
 
 ### Previous Editions
